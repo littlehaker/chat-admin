@@ -2,6 +2,11 @@
 
 import { DataTable } from "./components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DataTableColumnHeader } from "./components/data-table-column-header";
+import { admin } from "./dsl/admin-dsl";
+import { DataTableRowActions } from "./components/data-table-row-actions";
+import { createContext } from "react";
+import { ConfigContext, tableConfig } from "./context/config-context";
 
 const tasks = [
   {
@@ -39,30 +44,6 @@ const tasks = [
 
 const columns = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "id",
     // header: ({ column }) => (
     //   <DataTableColumnHeader column={column} title="Task" />
@@ -73,9 +54,9 @@ const columns = [
   },
   {
     accessorKey: "title",
-    //   header: ({ column }) => (
-    //     <DataTableColumnHeader column={column} title="Title" />
-    //   ),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Title" />
+    ),
     //   cell: ({ row }) => {
     //     const label = labels.find((label) => label.value === row.original.label)
 
@@ -118,9 +99,9 @@ const columns = [
   },
   {
     accessorKey: "priority",
-    // header: ({ column }) => (
-    //   <DataTableColumnHeader column={column} title="Priority" />
-    // ),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Priority" />
+    ),
     // cell: ({ row }) => {
     //   const priority = priorities.find(
     //     (priority) => priority.value === row.getValue("priority")
@@ -145,9 +126,41 @@ const columns = [
   },
   {
     id: "actions",
-    // cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];
+
+if (tableConfig.bulkActions?.length) {
+  columns.unshift({
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  });
+}
+
 export default function Home() {
-  return <DataTable data={tasks} columns={columns} />;
+  return (
+    <ConfigContext.Provider value={tableConfig}>
+      <DataTable data={tasks} columns={columns} />
+    </ConfigContext.Provider>
+  );
 }

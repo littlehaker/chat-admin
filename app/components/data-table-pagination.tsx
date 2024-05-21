@@ -14,14 +14,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect } from "react";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
+  pagination?: number[];
 }
 
 export function DataTablePagination<TData>({
   table,
+  pagination = [10, 20, 30, 40, 50],
 }: DataTablePaginationProps<TData>) {
+  useEffect(() => {
+    table.setPageSize(pagination[0]);
+  }, [pagination, table]);
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
@@ -41,7 +47,7 @@ export function DataTablePagination<TData>({
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {pagination.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>
