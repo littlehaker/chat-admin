@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { Badge } from "@/components/ui/badge";
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -28,17 +30,105 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { ConfigContext } from "../context/config-context";
+import { Checkbox } from "@radix-ui/react-checkbox";
+import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
+import _ from "lodash";
+
+function renderEnums(value, enums) {
+  const enumItem = enums.find((x) => x.value === value);
+
+  const display = enumItem?.label || _.capitalize(value);
+  return <Badge variant={enumItem?.variant || "default"}>{display}</Badge>;
+}
+
+function makeColumn(columnConfig) {
+  const ret = {
+    accessorKey: columnConfig.accessorKey,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title={columnConfig.label || _.capitalize(columnConfig.accessorKey)}
+      />
+    ),
+    cell: ({ row }) => {
+      // TODO: different type render
+      return (
+        <div>
+          {columnConfig.type === "text" &&
+            row.getValue(columnConfig.accessorKey)}
+          {columnConfig.type === "enum" &&
+            renderEnums(
+              row.getValue(columnConfig.accessorKey),
+              columnConfig.enums
+            )}
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  };
+  if (columnConfig.type === "enum") {
+    ret.filterFn = (row, id, value) => {
+      return value.includes(row.getValue(id));
+    };
+  }
+  return ret;
+}
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  // columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
-  columns,
+  // columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const tableConfig = React.useContext(ConfigContext);
+
+  const columns = React.useMemo(() => {
+    const ret = tableConfig.columns.map((x) => makeColumn(x));
+
+    if (tableConfig.bulkActions?.length) {
+      ret.unshift({
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label="Select all"
+            className="translate-y-[2px]"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+            className="translate-y-[2px]"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      });
+    }
+
+    if (tableConfig.rowActions.length) {
+      ret.push({
+        id: "actions",
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+      });
+    }
+
+    return ret;
+  }, [tableConfig]);
+
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});

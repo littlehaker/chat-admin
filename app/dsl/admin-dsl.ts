@@ -12,12 +12,12 @@ class AdminConfig {
     this.config.pagination = options;
   }
 
-  field(name, options = {}) {
-    this.config.columns.push({ type: "text", name, ...options });
+  field(accessorKey, options = {}) {
+    this.config.columns.push({ type: "text", accessorKey, ...options });
   }
 
-  enumField(name, enums, options = {}) {
-    this.config.columns.push({ type: "enum", name, enums, ...options });
+  enumField(accessorKey, enums, options = {}) {
+    this.config.columns.push({ type: "enum", accessorKey, enums, ...options });
   }
 
   rowAction(label, options = {}, callback = null) {
