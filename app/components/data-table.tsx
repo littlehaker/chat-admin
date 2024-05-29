@@ -34,12 +34,12 @@ import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import _ from "lodash";
+import { field } from "../field";
+import { FieldMeta } from "../field/base";
 
-function renderEnums(value, enums) {
-  const enumItem = enums.find((x) => x.value === value);
-
-  const display = enumItem?.label || _.capitalize(value);
-  return <Badge variant={enumItem?.variant || "default"}>{display}</Badge>;
+function renderField(config, value, row) {
+  const meta: FieldMeta = field[config.type] || field.text;
+  return meta.render(config, value, row);
 }
 
 function makeColumn(columnConfig) {
@@ -52,16 +52,13 @@ function makeColumn(columnConfig) {
       />
     ),
     cell: ({ row }) => {
-      // TODO: different type render
       return (
         <div>
-          {columnConfig.type === "text" &&
-            row.getValue(columnConfig.accessorKey)}
-          {columnConfig.type === "enum" &&
-            renderEnums(
-              row.getValue(columnConfig.accessorKey),
-              columnConfig.enums
-            )}
+          {renderField(
+            columnConfig,
+            row.getValue(columnConfig.accessorKey),
+            row
+          )}
         </div>
       );
     },
