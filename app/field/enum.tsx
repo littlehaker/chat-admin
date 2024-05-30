@@ -9,4 +9,7 @@ export class EnumField extends FieldMeta {
     const display = enumItem?.label || _.capitalize(value);
     return <Badge variant={enumItem?.variant || "default"}>{display}</Badge>;
   }
+  filterFn(row: any, id: any, value: any) {
+    return value.includes(row.getValue(id));
+  }
 }

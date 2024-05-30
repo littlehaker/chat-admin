@@ -1,10 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@/components/ui/badge";
 
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -29,20 +27,16 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { ConfigContext } from "../context/config-context";
+import { ConfigContext } from "../../context/config-context";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import _ from "lodash";
-import { field } from "../field";
-import { FieldMeta } from "../field/base";
-
-function renderField(config, value, row) {
-  const meta: FieldMeta = field[config.type] || field.text;
-  return meta.render(config, value, row);
-}
+import { field } from "../../field";
+import { FieldMeta } from "../../field/base";
 
 function makeColumn(columnConfig) {
+  const meta: FieldMeta = field[columnConfig.type] || field.text;
   const ret = {
     accessorKey: columnConfig.accessorKey,
     header: ({ column }) => (
@@ -54,7 +48,7 @@ function makeColumn(columnConfig) {
     cell: ({ row }) => {
       return (
         <div>
-          {renderField(
+          {meta.render(
             columnConfig,
             row.getValue(columnConfig.accessorKey),
             row
@@ -64,12 +58,9 @@ function makeColumn(columnConfig) {
     },
     enableSorting: false,
     enableHiding: false,
+    filterFn: meta.filterFn,
   };
-  if (columnConfig.type === "enum") {
-    ret.filterFn = (row, id, value) => {
-      return value.includes(row.getValue(id));
-    };
-  }
+
   return ret;
 }
 

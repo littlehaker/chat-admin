@@ -1,10 +1,10 @@
 "use client";
 
-import { DataTable } from "./components/data-table";
+import { DataTable } from "./components/renderer/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "./components/data-table-column-header";
+import { DataTableColumnHeader } from "./components/renderer/data-table-column-header";
 import { admin } from "./dsl/admin-dsl";
-import { DataTableRowActions } from "./components/data-table-row-actions";
+import { DataTableRowActions } from "./components/renderer/data-table-row-actions";
 import { createContext } from "react";
 import { ConfigContext, tableConfig } from "./context/config-context";
 

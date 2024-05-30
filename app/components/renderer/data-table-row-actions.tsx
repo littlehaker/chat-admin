@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useContext } from "react";
-import { ConfigContext } from "../context/config-context";
+import { ConfigContext } from "../../context/config-context";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

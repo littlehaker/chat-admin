@@ -5,4 +5,7 @@ export class FieldMeta {
   render(config, value, row) {
     return value;
   }
+  filterFn(row, id, value) {
+    return value === row.getValue(id);
+  }
 }
