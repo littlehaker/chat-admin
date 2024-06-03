@@ -10,9 +10,12 @@ import { useContext, useMemo } from "react";
 import { ConfigContext } from "../../context/config-context";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import _ from "lodash";
-
-// import { priorities, statuses } from "../data/data";
-// import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -27,8 +30,34 @@ export function DataTableToolbar<TData>({
     return tableConfig.columns.filter((x) => x.filterable);
   }, [tableConfig]);
 
+  const bulkActionsEnabled = useMemo(() => {
+    return table.getFilteredSelectedRowModel().rows.length > 0;
+  }, [table.getFilteredSelectedRowModel().rows.length]);
+
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between space-x-2">
+      <div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              disabled={!bulkActionsEnabled}
+              variant="outline"
+              className="flex h-8 data-[state=open]:bg-muted"
+            >
+              Bulk Actions
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[160px]">
+            {tableConfig.bulkActions.map((item) => {
+              return (
+                <DropdownMenuItem key={item.label}>
+                  {item.label}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div className="flex flex-1 items-center space-x-2">
         {filterColumns.map((column) => {
           const accessorKey = column.accessorKey;

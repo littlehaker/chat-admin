@@ -28,12 +28,12 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { ConfigContext } from "../../context/config-context";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import _ from "lodash";
 import { field } from "../../field";
 import { FieldMeta } from "../../field/base";
+import { Checkbox } from "@/components/ui/checkbox";
 
 function makeColumn(columnConfig) {
   const meta: FieldMeta = field[columnConfig.type] || field.text;
@@ -78,7 +78,7 @@ export function DataTable<TData, TValue>({
   const columns = React.useMemo(() => {
     const ret = tableConfig.columns.map((x) => makeColumn(x));
 
-    if (tableConfig.bulkActions?.length) {
+    if (tableConfig.bulkActions?.length > 0) {
       ret.unshift({
         id: "select",
         header: ({ table }) => (

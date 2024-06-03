@@ -16,11 +16,12 @@ export const tableConfig = admin((t) => {
   );
 
   t.rowAction("Edit");
-  t.rowAction("Delete", { confirmText: "真的要删除吗" }, (row) => {
+  t.rowAction("Delete", { confirmText: "Want to delete?" }, (row) => {
     console.log("Deleting row:", row);
   });
 
-  t.bulkAction("批量删除");
+  t.bulkAction("Delete");
+  t.bulkAction("Download");
 });
 
 export const ConfigContext = createContext(tableConfig);
