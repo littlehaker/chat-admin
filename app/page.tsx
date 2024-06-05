@@ -1,9 +1,19 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
 import { DataTable } from "./components/renderer/data-table";
-import { ConfigContext, tableConfig } from "./context/config-context";
+import {
+  ConfigContext,
+  buildConfig,
+  tableConfig as demoTableConfig,
+} from "./context/config-context";
+import { useSnapshot } from "valtio";
+import { changeInput, send, state } from "./store";
+import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
 
-const tasks = [
+const data: any[] = [
+  /*
   {
     id: "TASK-8782",
     title:
@@ -35,12 +45,34 @@ const tasks = [
     label: "feature",
     priority: "medium",
   },
+  */
 ];
-
-export default function Home() {
+function UserInput() {
+  const snap = useSnapshot(state);
   return (
-    <ConfigContext.Provider value={tableConfig}>
-      <DataTable data={tasks} />
-    </ConfigContext.Provider>
+    <div className="flex gap-2">
+      <Input value={snap.input} onChange={(e) => changeInput(e.target.value)} />
+      <Button onClick={send} disabled={snap.submitting}>
+        Send
+      </Button>
+    </div>
+  );
+}
+export default function Home() {
+  const snap = useSnapshot(state);
+  const tableConfig = useMemo(() => {
+    if (!snap.history[0]) {
+      return demoTableConfig;
+    } else {
+      return buildConfig(snap.history[0].content);
+    }
+  }, [snap.history[0]]);
+  return (
+    <div>
+      <ConfigContext.Provider value={tableConfig}>
+        <DataTable data={data} />
+      </ConfigContext.Provider>
+      <UserInput />
+    </div>
   );
 }

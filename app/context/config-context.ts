@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { admin } from "../dsl/admin-dsl";
 
-function buildConfig(code: string) {
+export function buildConfig(code: string) {
   return admin(new Function("t", code));
 }
 
