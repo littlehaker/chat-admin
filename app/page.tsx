@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import UserInput from "./components/ui/user-input";
 import { AdminRenderer } from "./components/renderer/react-admin";
 import _ from "lodash";
+import History from "./components/ui/history";
 
 export default function Home() {
   const snap = useSnapshot(state);
@@ -24,10 +25,17 @@ export default function Home() {
     }
   }, [_.last(snap.history)]);
   return (
-    <div>
-      {last && <AdminRenderer config={adminConfig} key={last?.time} />}
-
-      <UserInput />
+    <div className="flex flex-row w-screen h-screen">
+      <div className="flex-1">
+        {last && <AdminRenderer config={adminConfig} key={last?.time} />}
+      </div>
+      <div className="flex flex-col">
+        <div className="h-[50px]"></div>
+        <div className="flex-1">
+          <History />
+        </div>
+        <UserInput />
+      </div>
     </div>
   );
 }

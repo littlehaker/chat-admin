@@ -72,12 +72,12 @@ function renderResource(resource: AdminDSLResource) {
   );
 }
 
-export function AdminRenderer({ config }: { config: AdminDSL }) {
+export function AdminRenderer({ config }: { config?: AdminDSL }) {
   return (
     <Admin
       dataProvider={jsonServerProvider("https://jsonplaceholder.typicode.com")}
     >
-      {config.resources.map((resource) => renderResource(resource))}
+      {config?.resources.map((resource) => renderResource(resource))}
     </Admin>
   );
 }
