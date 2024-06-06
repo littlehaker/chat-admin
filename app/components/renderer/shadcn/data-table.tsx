@@ -27,12 +27,12 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { ConfigContext } from "../../context/config-context";
+import { ConfigContext } from "@/app/context/config-context";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import _ from "lodash";
-import { field } from "../../field";
-import { FieldMeta } from "../../field/base";
+import { field } from "@/app/field";
+import { FieldMeta } from "@/app/field/base";
 import { Checkbox } from "@/components/ui/checkbox";
 
 function makeColumn(columnConfig) {

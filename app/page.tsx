@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { DataTable } from "./components/renderer/data-table";
+import { DataTable } from "./components/renderer/shadcn/data-table";
 import {
   ConfigContext,
   buildConfig,
