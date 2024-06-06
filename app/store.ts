@@ -1,9 +1,10 @@
 import { proxy } from "valtio";
 import { generateCode, normalize } from "./service";
+import _ from "lodash";
 
 interface HistoryItem {
   content: string;
-  time: Date;
+  time: number;
 }
 
 export const state = proxy({
@@ -19,13 +20,13 @@ export function changeInput(val: string) {
 
 export async function send() {
   const prompt = state.input;
-  state.input = "";
   state.submitting = true;
-  const res = await generateCode(prompt);
+  const res = await generateCode(prompt, _.last(state.history)?.content);
+  state.input = "";
   const content = normalize(res.choices[0].message.content);
   state.history.push({
     content,
-    time: new Date(),
+    time: Date.now(),
   });
   state.submitting = false;
 }

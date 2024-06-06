@@ -9,19 +9,23 @@ import { state } from "./store";
 import { useMemo } from "react";
 import UserInput from "./components/ui/user-input";
 import { AdminRenderer } from "./components/renderer/react-admin";
+import _ from "lodash";
 
 export default function Home() {
   const snap = useSnapshot(state);
+  const last = _.last(snap.history);
+
   const adminConfig = useMemo(() => {
-    if (!snap.history[0]) {
+    const last = _.last(snap.history);
+    if (!last) {
       return undefined;
     } else {
-      return buildConfig(snap.history[0].content);
+      return buildConfig(last.content);
     }
-  }, [snap.history[0]]);
+  }, [_.last(snap.history)]);
   return (
     <div>
-      {adminConfig && <AdminRenderer config={adminConfig} />}
+      {last && <AdminRenderer config={adminConfig} key={last?.time} />}
 
       <UserInput />
     </div>

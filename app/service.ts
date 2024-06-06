@@ -56,10 +56,24 @@ export function normalize(code: string) {
   return extractSubstring(code, prefix, suffix);
 }
 
-export async function generateCode(prompt: string) {
+export async function generateCode(prompt: string, prevResult?: string) {
+  let _prompt;
+  if (prevResult) {
+    _prompt = `
+The previous DSL is like below
+======= start ========
+${prevResult}
+======= end ========
+
+My new requirements based on the previous DSL is
+${prompt}
+`;
+  } else {
+    _prompt = prompt;
+  }
   const messages = [
     { role: "system", content: systemPrompt },
-    { role: "user", content: prompt },
+    { role: "user", content: _prompt },
   ];
   const { data } = await axios.post(
     url,
