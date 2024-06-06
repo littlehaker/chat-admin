@@ -57,7 +57,7 @@ function makeColumn(columnConfig) {
       );
     },
     enableSorting: false,
-    enableHiding: false,
+    // enableHiding: false,
     filterFn: meta.filterFn,
   };
 
