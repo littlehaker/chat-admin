@@ -8,15 +8,24 @@ import {
   TextInput,
   Resource,
   Admin,
+  BooleanField,
+  BooleanInput,
 } from "react-admin";
 import BookIcon from "@mui/icons-material/Book";
 export const PostIcon = BookIcon;
 import jsonServerProvider from "ra-data-json-server";
-import { AdminDSLField, AdminDSLFieldType } from "@/app/dsl/admin-dsl";
+import {
+  AdminDSL,
+  AdminDSLField,
+  AdminDSLFieldType,
+  AdminDSLResource,
+} from "@/app/dsl/admin-dsl";
 import { useMemo } from "react";
 
 function renderField(field: AdminDSLField) {
   switch (field.type) {
+    case AdminDSLFieldType.BOOLEAN:
+      return <BooleanField source={field.name} key={field.name} />;
     case AdminDSLFieldType.TEXT:
     default:
       return <TextField source={field.name} key={field.name} />;
@@ -25,13 +34,15 @@ function renderField(field: AdminDSLField) {
 
 function renderInput(field: AdminDSLField) {
   switch (field.type) {
+    case AdminDSLFieldType.BOOLEAN:
+      return <BooleanInput source={field.name} key={field.name} />;
     case AdminDSLFieldType.TEXT:
     default:
       return <TextInput source={field.name} key={field.name} />;
   }
 }
 
-export const renderList = (resource) => () =>
+export const renderList = (resource: AdminDSLResource) => () =>
   (
     <List>
       <Datagrid>
@@ -41,43 +52,32 @@ export const renderList = (resource) => () =>
     </List>
   );
 
-// const PostTitle = () => {
-//   const record = useRecordContext();
-//   return <span>Post {record ? `"${record.title}"` : ""}</span>;
-// };
-
-export const renderEdit = (resource) => () =>
+export const renderEdit = (resource: AdminDSLResource) => () =>
   (
     <Edit>
       <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
     </Edit>
   );
 
-// export const PostCreate = () => (
-//   <Create title="Create a Post">
-//     <SimpleForm>
-//       <TextInput source="title" />
-//       <TextInput source="teaser" options={{ multiline: true }} />
-//       <TextInput multiline source="body" />
-//       <TextInput label="Publication date" source="published_at" />
-//       <TextInput source="average_note" />
-//     </SimpleForm>
-//   </Create>
-// );
-
-function renderResource({ resource }) {
+function renderResource(resource: AdminDSLResource) {
   const List = useMemo(() => renderList(resource), [resource]);
   const Edit = useMemo(() => renderEdit(resource), [resource]);
-  return <Resource name={resource.resourceName} list={List} edit={Edit} />;
+  return (
+    <Resource
+      key={resource.resourceName}
+      name={resource.resourceName}
+      list={List}
+      edit={Edit}
+    />
+  );
 }
 
-export function AdminRenderer({ config }: any) {
-  // console.log(config);
+export function AdminRenderer({ config }: { config: AdminDSL }) {
   return (
     <Admin
       dataProvider={jsonServerProvider("https://jsonplaceholder.typicode.com")}
     >
-      {config.resources.map((resource) => renderResource({ resource }))}
+      {config.resources.map((resource) => renderResource(resource))}
     </Admin>
   );
 }

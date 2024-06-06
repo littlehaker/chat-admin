@@ -1,7 +1,7 @@
 type ResourceBuilder = (t: AdminDSLResource) => void;
 type AdminBuilder = (t: AdminDSL) => void;
 
-class AdminDSL {
+export class AdminDSL {
   resources: AdminDSLResource[];
 
   constructor(callback: AdminBuilder) {
@@ -16,7 +16,7 @@ class AdminDSL {
   }
 }
 
-class AdminDSLResource {
+export class AdminDSLResource {
   resourceName: string;
   fields: AdminDSLField[];
 

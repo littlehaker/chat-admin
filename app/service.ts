@@ -46,7 +46,7 @@ function extractSubstring(str: string, prefix: string, suffix: string) {
   if (start !== -1 && end !== -1) {
     return str.substring(start + prefix.length, end);
   } else {
-    return "";
+    return str;
   }
 }
 

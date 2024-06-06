@@ -14,14 +14,14 @@ export default function Home() {
   const snap = useSnapshot(state);
   const adminConfig = useMemo(() => {
     if (!snap.history[0]) {
-      return demoTableConfig;
+      return undefined;
     } else {
       return buildConfig(snap.history[0].content);
     }
   }, [snap.history[0]]);
   return (
     <div>
-      <AdminRenderer config={adminConfig} />
+      {adminConfig && <AdminRenderer config={adminConfig} />}
 
       <UserInput />
     </div>
