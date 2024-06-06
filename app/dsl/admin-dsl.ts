@@ -1,23 +1,31 @@
+type ResourceBuilder = (t: AdminDSLResource) => void;
+type AdminBuilder = (t: AdminDSL) => void;
+
 class AdminDSL {
-  constructor(callback) {
+  resources: AdminDSLResource[];
+
+  constructor(callback: AdminBuilder) {
     this.resources = [];
     callback(this);
   }
 
-  resource(resourceName, config) {
-    const resource = new AdminDSLResource(resourceName, config);
+  resource(resourceName: string, callback: ResourceBuilder) {
+    const resource = new AdminDSLResource(resourceName, callback);
     this.resources.push(resource);
     return resource;
   }
 }
 
 class AdminDSLResource {
-  constructor(resourceName, config) {
+  resourceName: string;
+  fields: AdminDSLField[];
+
+  constructor(resourceName: string, callback: ResourceBuilder) {
     this.resourceName = resourceName;
     this.fields = [];
     this.actions = [];
     this.bulkActions = [];
-    this.config = config(this);
+    callback(this);
   }
 
   pagination(sizes) {
@@ -64,31 +72,38 @@ export class AdminDSLField {
   type = AdminDSLFieldType.TEXT;
   name: string;
   options: any;
-  constructor(name: string, options: any) {
+
+  constructor(name: string, options?: any) {
     this.name = name;
     this.options = options;
   }
 }
 
 class AdminDSLNumberField extends AdminDSLField {
-  constructor(name: string, options: any) {
+  constructor(name: string, options?: any) {
     super(name, options);
     this.type = AdminDSLFieldType.NUMBER;
   }
 }
 
 class AdminDSLBooleanField extends AdminDSLField {
-  constructor(name: string, options: any) {
+  constructor(name: string, options?: any) {
     super(name, options);
     this.type = AdminDSLFieldType.BOOLEAN;
   }
 }
 
+interface EnumItem {
+  label: string;
+  value: any;
+}
 class AdminDSLEnumField extends AdminDSLField {
-  constructor(name, values, options) {
+  enums: EnumItem[];
+
+  constructor(name: string, enums: EnumItem[], options?: any) {
     super(name, options);
     this.type = AdminDSLFieldType.ENUM;
-    this.values = values;
+    this.enums = enums;
   }
 }
 
