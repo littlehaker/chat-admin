@@ -38,7 +38,7 @@ admin((a) => {
 });
 ======= end ========
 
-Use this DSL to satisfy my requirements. Only response the code without anything else.
+Use this DSL to satisfy my requirements. Only respond the code in this dsl, don't respond anything else!!!
 `;
 
 function extractSubstring(str: string, prefix: string, suffix: string) {
