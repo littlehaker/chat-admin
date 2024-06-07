@@ -93,7 +93,7 @@ export const renderFilterSidebar = (resource: AdminDSLResource) => {
     [resource]
   );
   return (
-    <Card sx={{ order: -1, mt: 8, mr: 1, width: 200 }}>
+    <Card sx={{ order: -1, mt: 6, mr: 1, width: 200 }}>
       <CardContent>
         <SavedQueriesList />
         <FilterLiveSearch />
@@ -113,6 +113,15 @@ export const renderFilterSidebar = (resource: AdminDSLResource) => {
             ))}
           </FilterList>
         ))}
+
+        {filterableFields
+          .filter((x) => x.type === AdminDSLFieldType.BOOLEAN)
+          .map((x) => (
+            <FilterList key={x.name} label={x.name} icon={<SearchIcon />}>
+              <FilterListItem label="Yes" value={{ [x.name]: true }} />
+              <FilterListItem label="No" value={{ [x.name]: false }} />
+            </FilterList>
+          ))}
       </CardContent>
     </Card>
   );
