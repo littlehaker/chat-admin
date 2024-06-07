@@ -23,24 +23,29 @@ const initState = {
 
   history: [] as HistoryItem[],
 };
-const currentState: typeof initState = lsState
-  ? JSON.parse(lsState)
-  : initState;
+type State = typeof initState;
+const currentState: State = lsState ? JSON.parse(lsState) : initState;
 
 export const state = proxy(currentState);
+function getCurrentItem(snap: State) {
+  return snap.history.find((x) => x.time === snap.currentHistoryItem);
+}
+function getConfigFromItem(item?: HistoryItem) {
+  if (!item) {
+    return undefined;
+  } else {
+    return buildConfig(item.content);
+  }
+}
 export function useCurrentConfig() {
   const snap = useSnapshot(state);
 
   const current = useMemo(() => {
-    return snap.history.find((x) => x.time === snap.currentHistoryItem);
+    return getCurrentItem(snap as State);
   }, [snap.currentHistoryItem]);
 
   const config = useMemo(() => {
-    if (!current) {
-      return undefined;
-    } else {
-      return buildConfig(current.content);
-    }
+    return getConfigFromItem(current);
   }, [current]);
   return { config, item: current };
 }
@@ -58,7 +63,8 @@ export async function send() {
   state.submitting = true;
 
   try {
-    const res = await generateCode(prompt, _.last(state.history)?.content);
+    const item = getCurrentItem(state);
+    const res = await generateCode(prompt, item?.content);
     state.input = "";
     const content = normalize(res.choices[0].message.content);
     const time = Date.now();
