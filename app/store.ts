@@ -1,17 +1,29 @@
-import { proxy } from "valtio";
+import { proxy, subscribe } from "valtio";
 import { generateCode, normalize } from "./service";
 import _ from "lodash";
 
 interface HistoryItem {
+  userPrompt: string;
   content: string;
   time: number;
 }
 
-export const state = proxy({
+const lsKey = "valtioStore";
+const lsState = localStorage.getItem(lsKey);
+
+const initState = {
   input: "",
   submitting: false,
 
   history: [] as HistoryItem[],
+};
+const currentState: typeof initState = lsState
+  ? JSON.parse(lsState)
+  : initState;
+
+export const state = proxy(currentState);
+subscribe(state, () => {
+  localStorage.setItem(lsKey, JSON.stringify(state));
 });
 
 export function changeInput(val: string) {
@@ -25,6 +37,7 @@ export async function send() {
   state.input = "";
   const content = normalize(res.choices[0].message.content);
   state.history.push({
+    userPrompt: prompt,
     content,
     time: Date.now(),
   });
