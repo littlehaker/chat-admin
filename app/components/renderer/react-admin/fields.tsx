@@ -3,7 +3,9 @@ import {
   AdminDSLField,
   AdminDSLFieldType,
   AdminDSLEnumField,
+  AdminDSLResource,
 } from "@/app/dsl/admin-dsl";
+import { Card, CardContent } from "@mui/material";
 import {
   NumberField,
   SelectField,
@@ -15,7 +17,13 @@ import {
   TextInput,
   DateField,
   DateInput,
+  FilterList,
+  FilterListItem,
+  FilterLiveSearch,
+  SavedQueriesList,
 } from "react-admin";
+import SearchIcon from "@mui/icons-material/Search";
+import { useMemo } from "react";
 
 function getChoices(enums: AdminDSLEnumItem[]) {
   return enums.map((item) => ({ id: item.value, name: item.label }));
@@ -64,3 +72,48 @@ export function renderInput(field: AdminDSLField) {
       return <TextInput source={field.name} key={field.name} />;
   }
 }
+
+export function renderFilter(field: AdminDSLField) {
+  switch (field.type) {
+    case AdminDSLFieldType.TEXT:
+    default:
+      return <TextInput source={field.name} key={field.name} />;
+  }
+}
+
+export function renderFilters(resource: AdminDSLResource) {
+  return resource.fields
+    .filter((x) => x.options?.filterable === true)
+    .map(renderFilter);
+}
+
+export const renderFilterSidebar = (resource: AdminDSLResource) => {
+  const filterableFields = useMemo(
+    () => resource.fields.filter((x) => x.options?.filterable === true),
+    [resource]
+  );
+  return (
+    <Card sx={{ order: -1, mt: 8, mr: 1, width: 200 }}>
+      <CardContent>
+        <SavedQueriesList />
+        <FilterLiveSearch />
+
+        {(
+          filterableFields.filter(
+            (x) => x.type === AdminDSLFieldType.ENUM
+          ) as AdminDSLEnumField[]
+        ).map((x) => (
+          <FilterList key={x.name} label={x.name} icon={<SearchIcon />}>
+            {x.enums.map((item) => (
+              <FilterListItem
+                label={item.label}
+                value={{ [x.name]: item.value }}
+                key={item.value}
+              />
+            ))}
+          </FilterList>
+        ))}
+      </CardContent>
+    </Card>
+  );
+};

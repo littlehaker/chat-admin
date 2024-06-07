@@ -21,11 +21,12 @@ import localStorageDataProvider from "ra-data-local-storage";
 import { AdminDSL, AdminDSLResource } from "@/app/dsl/admin-dsl";
 import { Fragment, useMemo } from "react";
 import { IconName, renderIcon } from "./icon";
-import { renderField, renderInput } from "./fields";
+import { renderField, renderFilterSidebar, renderInput } from "./fields";
 
 export const renderList = (resource: AdminDSLResource) => () =>
   (
     <List
+      aside={renderFilterSidebar(resource)}
       pagination={<Pagination rowsPerPageOptions={resource.paginationSizes} />}
     >
       <Datagrid
