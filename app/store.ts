@@ -1,8 +1,10 @@
 "use client";
 
-import { proxy, subscribe } from "valtio";
+import { proxy, subscribe, useSnapshot } from "valtio";
 import { generateCode, normalize } from "./service";
 import _ from "lodash";
+import { useMemo } from "react";
+import { buildConfig } from "./context/config-context";
 
 interface HistoryItem {
   userPrompt: string;
@@ -26,6 +28,23 @@ const currentState: typeof initState = lsState
   : initState;
 
 export const state = proxy(currentState);
+export function useCurrentConfig() {
+  const snap = useSnapshot(state);
+
+  const current = useMemo(() => {
+    return snap.history.find((x) => x.time === snap.currentHistoryItem);
+  }, [snap.currentHistoryItem]);
+
+  const config = useMemo(() => {
+    if (!current) {
+      return undefined;
+    } else {
+      return buildConfig(current.content);
+    }
+  }, [current]);
+  return { config, item: current };
+}
+
 subscribe(state, () => {
   localStorage.setItem(lsKey, JSON.stringify(state));
 });
