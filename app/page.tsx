@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  buildConfig,
-  adminConfig as demoTableConfig,
-} from "./context/config-context";
+import { buildConfig } from "./context/config-context";
 import { useSnapshot } from "valtio";
 import { state } from "./store";
 import { useMemo } from "react";

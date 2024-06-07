@@ -20,7 +20,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.378.0",
     "next": "14.2.3",
-    "ra-data-json-server": "^4.16.17",
+    "ra-data-local-storage": "^4.16.17",
     "react": "^18",
     "react-admin": "^4.16.18",
     "react-dom": "^18",
