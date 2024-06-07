@@ -1,3 +1,5 @@
+"use client";
+
 import { proxy, subscribe } from "valtio";
 import { generateCode, normalize } from "./service";
 import _ from "lodash";
@@ -14,6 +16,8 @@ const lsState = localStorage.getItem(lsKey);
 const initState = {
   input: "",
   submitting: false,
+
+  currentHistoryItem: 0, // currentTimestamp
 
   history: [] as HistoryItem[],
 };
@@ -33,13 +37,23 @@ export function changeInput(val: string) {
 export async function send() {
   const prompt = state.input;
   state.submitting = true;
-  const res = await generateCode(prompt, _.last(state.history)?.content);
-  state.input = "";
-  const content = normalize(res.choices[0].message.content);
-  state.history.push({
-    userPrompt: prompt,
-    content,
-    time: Date.now(),
-  });
-  state.submitting = false;
+
+  try {
+    const res = await generateCode(prompt, _.last(state.history)?.content);
+    state.input = "";
+    const content = normalize(res.choices[0].message.content);
+    const time = Date.now();
+    state.history.push({
+      userPrompt: prompt,
+      content,
+      time: time,
+    });
+    state.currentHistoryItem = time;
+  } finally {
+    state.submitting = false;
+  }
+}
+
+export function selectHistoryItem(time: number) {
+  state.currentHistoryItem = time;
 }

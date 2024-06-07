@@ -3,51 +3,42 @@ import {
   Datagrid,
   Edit,
   SimpleForm,
-  TextField,
   EditButton,
-  TextInput,
   Resource,
   Admin,
-  BooleanField,
-  BooleanInput,
+  Create,
+  BulkExportButton,
+  BulkDeleteButton,
+  ShowButton,
+  Show,
+  SimpleShowLayout,
+  Pagination,
 } from "react-admin";
 import BookIcon from "@mui/icons-material/Book";
 export const PostIcon = BookIcon;
-import jsonServerProvider from "ra-data-json-server";
-import {
-  AdminDSL,
-  AdminDSLField,
-  AdminDSLFieldType,
-  AdminDSLResource,
-} from "@/app/dsl/admin-dsl";
-import { useMemo } from "react";
+import localStorageDataProvider from "ra-data-local-storage";
 
-function renderField(field: AdminDSLField) {
-  switch (field.type) {
-    case AdminDSLFieldType.BOOLEAN:
-      return <BooleanField source={field.name} key={field.name} />;
-    case AdminDSLFieldType.TEXT:
-    default:
-      return <TextField source={field.name} key={field.name} />;
-  }
-}
-
-function renderInput(field: AdminDSLField) {
-  switch (field.type) {
-    case AdminDSLFieldType.BOOLEAN:
-      return <BooleanInput source={field.name} key={field.name} />;
-    case AdminDSLFieldType.TEXT:
-    default:
-      return <TextInput source={field.name} key={field.name} />;
-  }
-}
+import { AdminDSL, AdminDSLResource } from "@/app/dsl/admin-dsl";
+import { Fragment, useMemo } from "react";
+import { IconName, renderIcon } from "./icon";
+import { renderField, renderInput } from "./fields";
 
 export const renderList = (resource: AdminDSLResource) => () =>
   (
-    <List>
-      <Datagrid>
+    <List
+      pagination={<Pagination rowsPerPageOptions={resource.paginationSizes} />}
+    >
+      <Datagrid
+        bulkActionButtons={
+          <Fragment>
+            <BulkExportButton />
+            <BulkDeleteButton />
+          </Fragment>
+        }
+      >
         {resource.fields.map(renderField)}
         <EditButton />
+        <ShowButton />
       </Datagrid>
     </List>
   );
@@ -59,24 +50,46 @@ export const renderEdit = (resource: AdminDSLResource) => () =>
     </Edit>
   );
 
+export const renderCreate = (resource: AdminDSLResource) => () =>
+  (
+    <Create>
+      <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
+    </Create>
+  );
+
+const renderShow = (resource: AdminDSLResource) => () =>
+  (
+    <Show>
+      <SimpleShowLayout>{resource.fields.map(renderField)}</SimpleShowLayout>
+    </Show>
+  );
+
 function renderResource(resource: AdminDSLResource) {
-  const List = useMemo(() => renderList(resource), [resource]);
-  const Edit = useMemo(() => renderEdit(resource), [resource]);
+  const ResourceList = useMemo(() => renderList(resource), [resource]);
+  const ResourceEdit = useMemo(() => renderEdit(resource), [resource]);
+  const ResourceCreate = useMemo(() => renderCreate(resource), [resource]);
+  const ResourceShow = useMemo(() => renderShow(resource), [resource]);
   return (
     <Resource
       key={resource.resourceName}
       name={resource.resourceName}
-      list={List}
-      edit={Edit}
+      list={ResourceList}
+      edit={ResourceEdit}
+      create={ResourceCreate}
+      show={ResourceShow}
+      icon={
+        resource.iconName
+          ? renderIcon(resource.iconName as IconName)
+          : undefined
+      }
     />
   );
 }
 
 export function AdminRenderer({ config }: { config?: AdminDSL }) {
+  const dataProvider = useMemo(() => localStorageDataProvider(), [config]);
   return (
-    <Admin
-      dataProvider={jsonServerProvider("https://jsonplaceholder.typicode.com")}
-    >
+    <Admin dataProvider={dataProvider}>
       {config?.resources.map((resource) => renderResource(resource))}
     </Admin>
   );

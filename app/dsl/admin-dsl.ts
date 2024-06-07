@@ -18,33 +18,44 @@ export class AdminDSL {
 
 export class AdminDSLResource {
   resourceName: string;
+  paginationSizes: number[];
   fields: AdminDSLField[];
+  iconName?: string;
 
   constructor(resourceName: string, callback: ResourceBuilder) {
     this.resourceName = resourceName;
     this.fields = [];
+    this.paginationSizes = [10, 25, 50, 100];
     this.actions = [];
     this.bulkActions = [];
     callback(this);
   }
 
-  pagination(sizes) {
+  icon(iconName: string) {
+    this.iconName = iconName;
+  }
+
+  pagination(sizes: number[]) {
     this.paginationSizes = sizes;
   }
 
-  field(name, options = {}) {
+  field(name: string, options = {}) {
     this.fields.push(new AdminDSLField(name, options));
   }
 
-  numberField(name, options = {}) {
+  numberField(name: string, options = {}) {
     this.fields.push(new AdminDSLNumberField(name, options));
   }
 
-  booleanField(name, options = {}) {
+  booleanField(name: string, options = {}) {
     this.fields.push(new AdminDSLBooleanField(name, options));
   }
 
-  enumField(name, values, options = {}) {
+  dateField(name: string, options = {}) {
+    this.fields.push(new AdminDSLDateField(name, options));
+  }
+
+  enumField(name: string, values: AdminDSLEnumItem[], options = {}) {
     this.fields.push(new AdminDSLEnumField(name, values, options));
   }
 
@@ -66,12 +77,18 @@ export enum AdminDSLFieldType {
   ENUM = "enum",
   BOOLEAN = "boolean",
   NUMBER = "number",
+  DATE = "date",
+}
+
+export interface AdminDSLFieldOption {
+  editable: boolean;
+  filterable: boolean;
 }
 
 export class AdminDSLField {
   type = AdminDSLFieldType.TEXT;
   name: string;
-  options: any;
+  options: AdminDSLFieldOption;
 
   constructor(name: string, options?: any) {
     this.name = name;
@@ -79,28 +96,35 @@ export class AdminDSLField {
   }
 }
 
-class AdminDSLNumberField extends AdminDSLField {
+export class AdminDSLNumberField extends AdminDSLField {
   constructor(name: string, options?: any) {
     super(name, options);
     this.type = AdminDSLFieldType.NUMBER;
   }
 }
 
-class AdminDSLBooleanField extends AdminDSLField {
+export class AdminDSLDateField extends AdminDSLField {
+  constructor(name: string, options?: any) {
+    super(name, options);
+    this.type = AdminDSLFieldType.DATE;
+  }
+}
+
+export class AdminDSLBooleanField extends AdminDSLField {
   constructor(name: string, options?: any) {
     super(name, options);
     this.type = AdminDSLFieldType.BOOLEAN;
   }
 }
 
-interface EnumItem {
+export interface AdminDSLEnumItem {
   label: string;
   value: any;
 }
-class AdminDSLEnumField extends AdminDSLField {
-  enums: EnumItem[];
+export class AdminDSLEnumField extends AdminDSLField {
+  enums: AdminDSLEnumItem[];
 
-  constructor(name: string, enums: EnumItem[], options?: any) {
+  constructor(name: string, enums: AdminDSLEnumItem[], options?: any) {
     super(name, options);
     this.type = AdminDSLFieldType.ENUM;
     this.enums = enums;

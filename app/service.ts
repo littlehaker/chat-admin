@@ -11,6 +11,7 @@ There is a DSL to create a view to manage resources
 admin((a) => {
   a.resource("posts", (t) => {
     t.pagination([2, 10, 20]);
+    t.icon("Highlight");  // Icon name from material-ui
 
     t.field("id");
     t.field("title", { filterable: true });
