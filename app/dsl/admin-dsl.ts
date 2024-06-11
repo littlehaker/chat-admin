@@ -57,6 +57,10 @@ export class AdminDSLResource {
     this.fields.push(new AdminDSLField(name, options));
   }
 
+  richTextField(name: string, options: AdminDSLFieldOptions = {}) {
+    this.fields.push(new AdminDSLRichTextField(name, options));
+  }
+
   numberField(name: string, options: AdminDSLFieldOptions = {}) {
     this.fields.push(new AdminDSLNumberField(name, options));
   }
@@ -93,6 +97,7 @@ export class AdminDSLResource {
 
 export enum AdminDSLFieldType {
   TEXT = "text",
+  RICH_TEXT = "rich_text",
   ENUM = "enum",
   BOOLEAN = "boolean",
   NUMBER = "number",
@@ -114,6 +119,13 @@ export class AdminDSLField {
   constructor(name: string, options?: AdminDSLFieldOptions) {
     this.name = name;
     this.options = options || {};
+  }
+}
+
+export class AdminDSLRichTextField extends AdminDSLField {
+  constructor(name: string, options?: any) {
+    super(name, options);
+    this.type = AdminDSLFieldType.RICH_TEXT;
   }
 }
 

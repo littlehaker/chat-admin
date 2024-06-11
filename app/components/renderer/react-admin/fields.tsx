@@ -26,7 +26,9 @@ import {
   ReferenceField,
   SearchInput,
   Labeled,
+  RichTextField,
 } from "react-admin";
+import { RichTextInput } from "ra-input-rich-text";
 import SearchIcon from "@mui/icons-material/Search";
 import { useMemo } from "react";
 import { IconName, renderIcon } from "./icon";
@@ -60,6 +62,8 @@ export function renderField(field: AdminDSLField) {
       );
     case AdminDSLFieldType.BOOLEAN:
       return <BooleanField source={field.name} key={field.name} />;
+    case AdminDSLFieldType.RICH_TEXT:
+      return <RichTextField source={field.name} key={field.name} />;
     case AdminDSLFieldType.TEXT:
     default:
       return <TextField source={field.name} key={field.name} />;
@@ -97,6 +101,8 @@ export function renderInput(field: AdminDSLField) {
       );
     case AdminDSLFieldType.BOOLEAN:
       return <BooleanInput {...props} />;
+    case AdminDSLFieldType.RICH_TEXT:
+      return <RichTextInput {...props} />;
     case AdminDSLFieldType.TEXT:
     default:
       return <TextInput {...props} />;

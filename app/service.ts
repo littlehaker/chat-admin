@@ -55,6 +55,7 @@ export class AdminDSLResource {
   icon(iconName: string)
   pagination(sizes: number[])
   field(name: string, options: AdminDSLFieldOptions = {})
+  richTextField(name: string, options: AdminDSLFieldOptions = {})
   numberField(name: string, options: AdminDSLFieldOptions = {})
   booleanField(name: string, options: AdminDSLFieldOptions = {})
   dateField(name: string, options: AdminDSLFieldOptions = {})

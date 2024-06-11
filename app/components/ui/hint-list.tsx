@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 
 const hints = [
-  "Contacts with id, name, age, gender",
+  "Contacts with id, name, birthday, gender",
   "Albums with musicians",
   "I want to manage todos that can be assigned to user",
 ];
