@@ -41,7 +41,7 @@ Use this DSL to satisfy my requirements. Only respond the code in this dsl, don'
 
 function extractSubstring(str: string, prefix: string, suffix: string) {
   var start = str.indexOf(prefix);
-  var end = str.indexOf(suffix);
+  var end = str.indexOf(suffix, start + prefix.length);
   if (start !== -1 && end !== -1) {
     return str.substring(start + prefix.length, end);
   } else {
@@ -52,7 +52,7 @@ function extractSubstring(str: string, prefix: string, suffix: string) {
 export function normalize(code: string) {
   const prefix = "======= start ========";
   const suffix = "======= end ========";
-  return extractSubstring(code, prefix, suffix);
+  return extractSubstring(extractSubstring(code, prefix, suffix), "```", "```");
 }
 
 export async function generateCode(prompt: string, prevResult?: string) {
