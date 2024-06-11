@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fontsource/roboto": "^5.0.13",
     "@mui/material": "^5.15.19",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",

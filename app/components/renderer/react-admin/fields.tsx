@@ -54,6 +54,7 @@ export function renderField(field: AdminDSLField) {
           reference={(field as AdminDSLReferenceField).reference}
           source={field.name}
           key={field.name}
+          link="show"
         />
       );
     case AdminDSLFieldType.BOOLEAN:
