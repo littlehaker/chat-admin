@@ -17,7 +17,7 @@ admin((a) => {
     t.field("title", { filterable: true });
     t.field("body");
     t.numberField("score");
-    t.referenceField("author", "users"); // a reference to another resource
+    t.referenceField("author", "users", { icon: "Person" }); // a reference to another resource
     t.booleanField("completed", { label: "Completed", editable: false });
     t.enumField(
       "priority",

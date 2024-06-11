@@ -24,9 +24,11 @@ import {
   SavedQueriesList,
   ReferenceInput,
   ReferenceField,
+  SearchInput,
 } from "react-admin";
 import SearchIcon from "@mui/icons-material/Search";
 import { useMemo } from "react";
+import { IconName, renderIcon } from "./icon";
 
 function getChoices(enums: AdminDSLEnumItem[]) {
   return enums.map((item) => ({ id: item.value, name: item.label }));
@@ -101,9 +103,23 @@ export function renderFilter(field: AdminDSLField) {
 }
 
 export function renderFilters(resource: AdminDSLResource) {
-  return resource.fields
-    .filter((x) => x.options?.filterable === true)
-    .map(renderFilter);
+  return [
+    <SearchInput source="q" alwaysOn />,
+    ...resource.fields
+      .filter((x) => x.options?.filterable === true)
+      .map(renderInput),
+  ];
+}
+
+function renderFieldIcon(field: AdminDSLField) {
+  let icon = <SearchIcon fontSize="small" />;
+  if (field.options.icon) {
+    const Comp = renderIcon(field.options.icon as IconName);
+    if (Comp) {
+      icon = <Comp fontSize="small" />;
+    }
+  }
+  return icon;
 }
 
 export const renderFilterSidebar = (resource: AdminDSLResource) => {
@@ -121,22 +137,24 @@ export const renderFilterSidebar = (resource: AdminDSLResource) => {
           filterableFields.filter(
             (x) => x.type === AdminDSLFieldType.ENUM
           ) as AdminDSLEnumField[]
-        ).map((x) => (
-          <FilterList key={x.name} label={x.name} icon={<SearchIcon />}>
-            {x.enums.map((item) => (
-              <FilterListItem
-                label={item.label}
-                value={{ [x.name]: item.value }}
-                key={item.value}
-              />
-            ))}
-          </FilterList>
-        ))}
+        ).map((x) => {
+          return (
+            <FilterList key={x.name} label={x.name} icon={renderFieldIcon(x)}>
+              {x.enums.map((item) => (
+                <FilterListItem
+                  label={item.label}
+                  value={{ [x.name]: item.value }}
+                  key={item.value}
+                />
+              ))}
+            </FilterList>
+          );
+        })}
 
         {filterableFields
           .filter((x) => x.type === AdminDSLFieldType.BOOLEAN)
           .map((x) => (
-            <FilterList key={x.name} label={x.name} icon={<SearchIcon />}>
+            <FilterList key={x.name} label={x.name} icon={renderFieldIcon(x)}>
               <FilterListItem label="Yes" value={{ [x.name]: true }} />
               <FilterListItem label="No" value={{ [x.name]: false }} />
             </FilterList>

@@ -93,8 +93,9 @@ export enum AdminDSLFieldType {
 }
 
 export interface AdminDSLFieldOption {
-  editable: boolean;
-  filterable: boolean;
+  editable?: boolean;
+  filterable?: boolean;
+  icon?: string;
 }
 
 export class AdminDSLField {
@@ -102,9 +103,9 @@ export class AdminDSLField {
   name: string;
   options: AdminDSLFieldOption;
 
-  constructor(name: string, options?: any) {
+  constructor(name: string, options?: AdminDSLFieldOption) {
     this.name = name;
-    this.options = options;
+    this.options = options || {};
   }
 }
 
