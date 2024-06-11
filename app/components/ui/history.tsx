@@ -13,11 +13,22 @@ export default function History() {
           <ListItem key={item.time} disablePadding>
             <ListItemButton
               selected={item.time === snap.currentHistoryItem}
-              onClick={() => selectHistoryItem(item.time)}
+              onClick={() => {
+                if (!item.isError) {
+                  selectHistoryItem(item.time);
+                }
+              }}
             >
               <ListItemText
                 primary={item.userPrompt}
                 secondary={dayjs(item.time).format("HH:mm:ss")}
+                primaryTypographyProps={
+                  item.isError
+                    ? {
+                        color: "error",
+                      }
+                    : {}
+                }
               />
             </ListItemButton>
           </ListItem>

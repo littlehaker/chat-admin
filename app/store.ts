@@ -1,15 +1,15 @@
 "use client";
 
 import { proxy, subscribe, useSnapshot } from "valtio";
-import { generateCode, normalize } from "./service";
+import { buildDSL, generateCode, normalize, testDSL } from "./service";
 import _ from "lodash";
 import { useMemo } from "react";
-import { buildConfig } from "./context/config-context";
 
 interface HistoryItem {
   userPrompt: string;
   content: string;
   time: number;
+  isError?: true;
 }
 
 const lsKey = "valtioStore";
@@ -34,7 +34,7 @@ function getConfigFromItem(item?: HistoryItem) {
   if (!item) {
     return undefined;
   } else {
-    return buildConfig(item.content);
+    return buildDSL(item.content);
   }
 }
 export function useCurrentConfig() {
@@ -68,12 +68,21 @@ export async function send() {
     state.input = "";
     const content = normalize(res.choices[0].message.content);
     const time = Date.now();
-    state.history.push({
-      userPrompt: prompt,
-      content,
-      time: time,
-    });
-    state.currentHistoryItem = time;
+    if (testDSL(content)) {
+      state.history.push({
+        userPrompt: prompt,
+        content,
+        time,
+      });
+      state.currentHistoryItem = time;
+    } else {
+      state.history.push({
+        userPrompt: prompt,
+        content,
+        time,
+        isError: true,
+      });
+    }
   } finally {
     state.submitting = false;
   }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { admin } from "./dsl/admin-dsl";
 
 const url = "http://localhost:6767";
 
@@ -88,6 +89,20 @@ function extractSubstring(str: string, prefix: string, suffix: string) {
     return str.substring(start + prefix.length, end);
   } else {
     return str;
+  }
+}
+
+export function buildDSL(code: string) {
+  const fn = new Function("admin", `return ${code.replace(/^[\n]+/, "")}`);
+  return fn(admin);
+}
+
+export function testDSL(code: string) {
+  try {
+    buildDSL(code);
+    return true;
+  } catch {
+    return false;
   }
 }
 

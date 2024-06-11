@@ -1,13 +1,5 @@
 "use client";
 import { createContext } from "react";
-import { admin } from "../dsl/admin-dsl";
-import { exampleDSL } from "../service";
+import { AdminDSL } from "../dsl/admin-dsl";
 
-export function buildConfig(code: string) {
-  const fn = new Function("admin", `return ${code.replace(/^[\n]+/, "")}`);
-  return fn(admin);
-}
-
-export const adminConfig = buildConfig(exampleDSL);
-
-export const ConfigContext = createContext(adminConfig);
+export const ConfigContext = createContext<AdminDSL | undefined>(undefined);
