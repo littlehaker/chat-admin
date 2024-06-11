@@ -93,7 +93,7 @@ export const renderFilterSidebar = (resource: AdminDSLResource) => {
     [resource]
   );
   return (
-    <Card sx={{ order: -1, mt: 6, mr: 1, width: 200 }}>
+    <Card sx={{ order: -1, mt: 6, mr: 1, width: 220 }}>
       <CardContent>
         <SavedQueriesList />
         <FilterLiveSearch />

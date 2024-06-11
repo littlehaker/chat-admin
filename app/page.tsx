@@ -18,7 +18,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col">
         <div className="h-[50px]"></div>
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <History />
         </div>
         <UserInput />
