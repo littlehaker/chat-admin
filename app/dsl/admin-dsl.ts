@@ -1,12 +1,26 @@
 type ResourceBuilder = (t: AdminDSLResource) => void;
 type AdminBuilder = (t: AdminDSL) => void;
 
+function makeProxy<T extends object>(_this: T): T {
+  return new Proxy(_this, {
+    get: function (target: T, property: string) {
+      if (typeof (target as any)[property] === "undefined") {
+        return function () {
+          console.warn(`Method ${property} is not implemented.`);
+        };
+      } else {
+        return (target as any)[property];
+      }
+    },
+  });
+}
+
 export class AdminDSL {
   resources: AdminDSLResource[];
 
   constructor(callback: AdminBuilder) {
     this.resources = [];
-    callback(this);
+    callback(makeProxy(this));
   }
 
   resource(resourceName: string, callback: ResourceBuilder) {
@@ -28,9 +42,7 @@ export class AdminDSLResource {
     this.resourceName = resourceName;
     this.fields = [];
     this.paginationSizes = [10, 25, 50, 100];
-    this.actions = [];
-    this.bulkActions = [];
-    callback(this);
+    callback(makeProxy(this));
   }
 
   icon(iconName: string) {
@@ -68,18 +80,6 @@ export class AdminDSLResource {
   // TODO: custom methods to render resource title
   title(temp: string) {
     this.renderTitle = () => temp;
-  }
-
-  rowAction(name, options = {}, handler) {
-    this.actions.push({
-      name,
-      options,
-      handler,
-    });
-  }
-
-  bulkAction(name) {
-    this.bulkActions.push({ name });
   }
 }
 
@@ -153,7 +153,6 @@ export class AdminDSLEnumField extends AdminDSLField {
   }
 }
 
-// TODO: use proxy to handle undefined methods
 export function admin(callback: (a: AdminDSL) => void) {
   return new AdminDSL(callback);
 }

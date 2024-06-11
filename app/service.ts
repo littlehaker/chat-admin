@@ -2,12 +2,7 @@ import axios from "axios";
 
 const url = "http://localhost:6767";
 
-const systemPrompt = `
-You are a js expert.
-
-There is a DSL to create a view to manage resources
-
-======= start ========
+export const exampleDSL = `
 admin((a) => {
   a.resource("posts", (t) => {
     t.pagination([2, 10, 20]);
@@ -34,6 +29,15 @@ admin((a) => {
     t.field("name");
   });
 });
+`;
+
+const systemPrompt = `
+You are a js expert.
+
+There is a DSL to create a view to manage resources
+
+======= start ========
+${exampleDSL}
 ======= end ========
 
 Use this DSL to satisfy my requirements. Only respond the code in this dsl, don't respond anything else!!!
