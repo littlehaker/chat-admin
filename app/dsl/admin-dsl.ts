@@ -20,6 +20,8 @@ export class AdminDSLResource {
   resourceName: string;
   paginationSizes: number[];
   fields: AdminDSLField[];
+  renderTitle: (record: any) => string = (record: any) =>
+    record.title || record.name || record.id;
   iconName?: string;
 
   constructor(resourceName: string, callback: ResourceBuilder) {
@@ -59,6 +61,15 @@ export class AdminDSLResource {
     this.fields.push(new AdminDSLEnumField(name, values, options));
   }
 
+  referenceField(name: string, reference: string, options = {}) {
+    this.fields.push(new AdminDSLReferenceField(name, reference, options));
+  }
+
+  // TODO: custom methods to render resource title
+  title(temp: string) {
+    this.renderTitle = () => temp;
+  }
+
   rowAction(name, options = {}, handler) {
     this.actions.push({
       name,
@@ -78,6 +89,7 @@ export enum AdminDSLFieldType {
   BOOLEAN = "boolean",
   NUMBER = "number",
   DATE = "date",
+  REFERENCE = "reference",
 }
 
 export interface AdminDSLFieldOption {
@@ -117,6 +129,15 @@ export class AdminDSLBooleanField extends AdminDSLField {
   }
 }
 
+export class AdminDSLReferenceField extends AdminDSLField {
+  reference: string;
+  constructor(name: string, reference: string, options?: any) {
+    super(name, options);
+    this.type = AdminDSLFieldType.REFERENCE;
+    this.reference = reference;
+  }
+}
+
 export interface AdminDSLEnumItem {
   label: string;
   value: any;
@@ -131,6 +152,7 @@ export class AdminDSLEnumField extends AdminDSLField {
   }
 }
 
+// TODO: use proxy to handle undefined methods
 export function admin(callback: (a: AdminDSL) => void) {
   return new AdminDSL(callback);
 }

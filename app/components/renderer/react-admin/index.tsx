@@ -78,6 +78,7 @@ function renderResource(resource: AdminDSLResource) {
       edit={ResourceEdit}
       create={ResourceCreate}
       show={ResourceShow}
+      recordRepresentation={resource.renderTitle}
       icon={
         resource.iconName
           ? renderIcon(resource.iconName as IconName)

@@ -17,6 +17,7 @@ admin((a) => {
     t.field("title", { filterable: true });
     t.field("body");
     t.numberField("score");
+    t.referenceField("author", "users"); // a reference to another resource
     t.booleanField("completed", { label: "Completed", editable: false });
     t.enumField(
       "priority",
@@ -26,14 +27,11 @@ admin((a) => {
       ],
       { filterable: true }
     );
+  });
 
-    t.rowAction("Edit");
-    t.rowAction("Delete", { confirmText: "Want to delete?" }, (row) => {
-      console.log("Deleting row:", row);
-    });
-
-    t.bulkAction("Delete");
-    t.bulkAction("Download");
+  a.resource("users", (t) => {
+    t.field("id");
+    t.field("name");
   });
 });
 ======= end ========

@@ -4,6 +4,7 @@ import {
   AdminDSLFieldType,
   AdminDSLEnumField,
   AdminDSLResource,
+  AdminDSLReferenceField,
 } from "@/app/dsl/admin-dsl";
 import { Card, CardContent } from "@mui/material";
 import {
@@ -21,6 +22,8 @@ import {
   FilterListItem,
   FilterLiveSearch,
   SavedQueriesList,
+  ReferenceInput,
+  ReferenceField,
 } from "react-admin";
 import SearchIcon from "@mui/icons-material/Search";
 import { useMemo } from "react";
@@ -43,6 +46,14 @@ export function renderField(field: AdminDSLField) {
           choices={getChoices((field as AdminDSLEnumField).enums)}
         />
       );
+    case AdminDSLFieldType.REFERENCE:
+      return (
+        <ReferenceField
+          reference={(field as AdminDSLReferenceField).reference}
+          source={field.name}
+          key={field.name}
+        />
+      );
     case AdminDSLFieldType.BOOLEAN:
       return <BooleanField source={field.name} key={field.name} />;
     case AdminDSLFieldType.TEXT:
@@ -63,6 +74,14 @@ export function renderInput(field: AdminDSLField) {
           source={field.name}
           key={field.name}
           choices={getChoices((field as AdminDSLEnumField).enums)}
+        />
+      );
+    case AdminDSLFieldType.REFERENCE:
+      return (
+        <ReferenceInput
+          reference={(field as AdminDSLReferenceField).reference}
+          source={field.name}
+          key={field.name}
         />
       );
     case AdminDSLFieldType.BOOLEAN:
