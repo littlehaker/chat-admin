@@ -66,32 +66,35 @@ export function renderField(field: AdminDSLField) {
 }
 
 export function renderInput(field: AdminDSLField) {
+  const props = {
+    source: field.name,
+    key: field.name,
+    disabled: field.options.editable === false,
+  };
   switch (field.type) {
     case AdminDSLFieldType.NUMBER:
-      return <NumberInput source={field.name} key={field.name} />;
+      return <NumberInput {...props} />;
     case AdminDSLFieldType.DATE:
-      return <DateInput source={field.name} key={field.name} />;
+      return <DateInput {...props} />;
     case AdminDSLFieldType.ENUM:
       return (
         <SelectInput
-          source={field.name}
-          key={field.name}
+          {...props}
           choices={getChoices((field as AdminDSLEnumField).enums)}
         />
       );
     case AdminDSLFieldType.REFERENCE:
       return (
         <ReferenceInput
+          {...props}
           reference={(field as AdminDSLReferenceField).reference}
-          source={field.name}
-          key={field.name}
         />
       );
     case AdminDSLFieldType.BOOLEAN:
-      return <BooleanInput source={field.name} key={field.name} />;
+      return <BooleanInput {...props} />;
     case AdminDSLFieldType.TEXT:
     default:
-      return <TextInput source={field.name} key={field.name} />;
+      return <TextInput {...props} />;
   }
 }
 

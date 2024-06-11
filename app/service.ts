@@ -8,7 +8,7 @@ admin((a) => {
     t.pagination([2, 10, 20]);
     t.icon("Highlight");  // Icon name from material-ui
 
-    t.field("id");
+    t.field("id", { editable: false }); // id is normally uneditable
     t.field("title", { filterable: true });
     t.field("body");
     t.numberField("score");
@@ -22,11 +22,17 @@ admin((a) => {
       ],
       { filterable: true }
     );
+
+    // ...
   });
 
   a.resource("users", (t) => {
-    t.field("id");
+    t.icon("Person");
+
+    t.field("id", { editable: false });
     t.field("name");
+
+    // ...
   });
 });
 `;
