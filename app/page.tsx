@@ -1,16 +1,31 @@
 "use client";
 
-import { buildConfig } from "./context/config-context";
-import { useSnapshot } from "valtio";
-import { state, useCurrentConfig } from "./store";
-import { useMemo } from "react";
+import { useCurrentConfig } from "./store";
 import UserInput from "./components/ui/user-input";
 import { AdminRenderer } from "./components/renderer/react-admin";
-import _ from "lodash";
 import History from "./components/ui/history";
-
+import { Typography } from "@mui/material";
 export default function Home() {
   const { config, item } = useCurrentConfig();
+  if (!item) {
+    // Empty
+    return (
+      <div className="flex flex-col justify-center items-center h-screen g-8">
+        <Typography variant="h1">Chat Admin</Typography>{" "}
+        <div className="w-[500px]">
+          <UserInput />
+        </div>
+        <iframe
+          width="170"
+          height="30"
+          className="mt-12"
+          title="GitHub"
+          src="https://ghbtns.com/github-btn.html?user=littlehaker&repo=chat-admin&type=star&size=large"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-row w-screen h-screen">
       <div className="flex-1">
