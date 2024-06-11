@@ -46,14 +46,14 @@ export const renderList = (resource: AdminDSLResource) => () =>
 
 export const renderEdit = (resource: AdminDSLResource) => () =>
   (
-    <Edit>
+    <Edit redirect="list">
       <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
     </Edit>
   );
 
 export const renderCreate = (resource: AdminDSLResource) => () =>
   (
-    <Create>
+    <Create redirect="list">
       <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
     </Create>
   );

@@ -25,6 +25,7 @@ import {
   ReferenceInput,
   ReferenceField,
   SearchInput,
+  Labeled,
 } from "react-admin";
 import SearchIcon from "@mui/icons-material/Search";
 import { useMemo } from "react";
@@ -66,10 +67,14 @@ export function renderField(field: AdminDSLField) {
 }
 
 export function renderInput(field: AdminDSLField) {
+  const disabled = field.options.editable === false;
+  if (disabled) {
+    return <Labeled>{renderField(field)}</Labeled>;
+  }
+
   const props = {
     source: field.name,
     key: field.name,
-    disabled: field.options.editable === false,
   };
   switch (field.type) {
     case AdminDSLFieldType.NUMBER:
