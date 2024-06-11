@@ -37,16 +37,47 @@ admin((a) => {
 });
 `;
 
+const typeDef = `
+type ResourceBuilder = (t: AdminDSLResource) => void;
+type AdminBuilder = (t: AdminDSL) => void;
+interface AdminDSLFieldOptions {
+  editable?: boolean;
+  filterable?: boolean;
+  icon?: string;
+}
+
+class AdminDSL {
+  constructor(callback: AdminBuilder)
+}
+
+export class AdminDSLResource {
+  constructor(resourceName: string, callback: ResourceBuilder)
+  icon(iconName: string)
+  pagination(sizes: number[])
+  field(name: string, options: AdminDSLFieldOptions = {})
+  numberField(name: string, options: AdminDSLFieldOptions = {})
+  booleanField(name: string, options: AdminDSLFieldOptions = {})
+  dateField(name: string, options: AdminDSLFieldOptions = {})
+  enumField(name: string, values: AdminDSLEnumItem[], options: AdminDSLFieldOptions = {})
+  referenceField(name: string, reference: string, options: AdminDSLFieldOptions = {})
+}
+`;
+
 const systemPrompt = `
 You are a js expert.
 
-There is a DSL to create a view to manage resources
+There is a DSL to create a view to manage resources, which follow the following types
 
+======= start ========
+${typeDef}
+======= end ========
+
+This is an example of creating an admin application to manage posts and users
 ======= start ========
 ${exampleDSL}
 ======= end ========
 
-Use this DSL to satisfy my requirements. Only respond the code in this dsl, don't respond anything else!!!
+Use this DSL to make admin application I want. Only respond the code in this DSL, don't respond anything else!!!
 `;
 
 function extractSubstring(str: string, prefix: string, suffix: string) {

@@ -53,27 +53,35 @@ export class AdminDSLResource {
     this.paginationSizes = sizes;
   }
 
-  field(name: string, options = {}) {
+  field(name: string, options: AdminDSLFieldOptions = {}) {
     this.fields.push(new AdminDSLField(name, options));
   }
 
-  numberField(name: string, options = {}) {
+  numberField(name: string, options: AdminDSLFieldOptions = {}) {
     this.fields.push(new AdminDSLNumberField(name, options));
   }
 
-  booleanField(name: string, options = {}) {
+  booleanField(name: string, options: AdminDSLFieldOptions = {}) {
     this.fields.push(new AdminDSLBooleanField(name, options));
   }
 
-  dateField(name: string, options = {}) {
+  dateField(name: string, options: AdminDSLFieldOptions = {}) {
     this.fields.push(new AdminDSLDateField(name, options));
   }
 
-  enumField(name: string, values: AdminDSLEnumItem[], options = {}) {
+  enumField(
+    name: string,
+    values: AdminDSLEnumItem[],
+    options: AdminDSLFieldOptions = {}
+  ) {
     this.fields.push(new AdminDSLEnumField(name, values, options));
   }
 
-  referenceField(name: string, reference: string, options = {}) {
+  referenceField(
+    name: string,
+    reference: string,
+    options: AdminDSLFieldOptions = {}
+  ) {
     this.fields.push(new AdminDSLReferenceField(name, reference, options));
   }
 
@@ -92,7 +100,7 @@ export enum AdminDSLFieldType {
   REFERENCE = "reference",
 }
 
-export interface AdminDSLFieldOption {
+export interface AdminDSLFieldOptions {
   editable?: boolean;
   filterable?: boolean;
   icon?: string;
@@ -101,9 +109,9 @@ export interface AdminDSLFieldOption {
 export class AdminDSLField {
   type = AdminDSLFieldType.TEXT;
   name: string;
-  options: AdminDSLFieldOption;
+  options: AdminDSLFieldOptions;
 
-  constructor(name: string, options?: AdminDSLFieldOption) {
+  constructor(name: string, options?: AdminDSLFieldOptions) {
     this.name = name;
     this.options = options || {};
   }
