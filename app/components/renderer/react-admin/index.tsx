@@ -18,11 +18,7 @@ import BookIcon from "@mui/icons-material/Book";
 export const PostIcon = BookIcon;
 import localStorageDataProvider from "ra-data-local-storage";
 
-import {
-  AdminDSL,
-  AdminDSLDashboard,
-  AdminDSLResource,
-} from "@/app/dsl/admin-dsl";
+import { AdminDSL, AdminDSLResource } from "@/app/dsl/admin-dsl";
 import { Fragment, useMemo } from "react";
 import { IconName, renderIcon } from "./icon";
 import { renderField, renderFilterSidebar, renderInput } from "./fields";

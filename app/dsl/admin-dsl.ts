@@ -48,12 +48,26 @@ export class AdminDSLDashboard {
   pieChart(resource: string, field: string) {
     this.charts.push(new AdminDSLPieChart(resource, field));
   }
+
+  barChart(resource: string, nameField: string, valueField: string) {
+    this.charts.push(new AdminDSLBarChart(resource, nameField, valueField));
+  }
 }
 
 export class AdminDSLChart {
   resource: string;
   constructor(resource: string) {
     this.resource = resource;
+  }
+}
+
+export class AdminDSLBarChart extends AdminDSLChart {
+  nameField: string;
+  valueField: string;
+  constructor(resource: string, nameField: string, valueField: string) {
+    super(resource);
+    this.nameField = nameField;
+    this.valueField = valueField;
   }
 }
 

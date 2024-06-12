@@ -45,6 +45,7 @@ admin((a) => {
     // dashboard can contain multiple charts
     t.pieChart("posts", "completed");
     t.pieChart("users", "gender");
+    t.barChart("posts", "title", "score");
   });
 });
 `;
@@ -82,6 +83,7 @@ class AdminDSLResource {
 class AdminDSLDashboard {
   constructor(callback: DashboardBuilder)
   pieChart(resource: string, field: string)
+  barChart(resource: string, nameField: string, valueField: string)
 }
 `;
 
