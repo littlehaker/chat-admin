@@ -40,13 +40,6 @@ admin((a) => {
     // ...
   });
 });
-
-// also, give me 3 advices based on the dsl above
-advice([
-  "Add a birthday for user",
-  "Change pagination for post to [20, 50, 100]",
-  "Add a low value for post's priority"
-]);
 `;
 
 const typeDef = `
@@ -78,7 +71,6 @@ class AdminDSLResource {
 }
 
 admin(callback: AdminBuilder)
-advices(array: string[])
 `;
 
 const systemPrompt = `
