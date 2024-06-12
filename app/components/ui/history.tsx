@@ -1,3 +1,5 @@
+"use client";
+
 import { selectHistoryItem, state } from "@/app/store";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 

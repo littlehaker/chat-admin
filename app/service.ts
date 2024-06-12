@@ -1,5 +1,5 @@
 import axios from "axios";
-import { admin } from "./dsl/admin-dsl";
+import { AdminDSL, admin } from "./dsl/admin-dsl";
 
 const url = "http://localhost:6767";
 
@@ -32,8 +32,19 @@ admin((a) => {
 
     t.field("id", { editable: false });
     t.field("name");
+    t.enumField("gender", [
+      { label: "Male", value: "male" },
+      { label: "Female", value: "female" },
+    ]);
 
     // ...
+  });
+
+  // There is only one dashboard call
+  a.dashboard((t) => {
+    // dashboard can contain multiple charts
+    t.pieChart("posts", "completed");
+    t.pieChart("users", "gender");
   });
 });
 `;
@@ -41,6 +52,8 @@ admin((a) => {
 const typeDef = `
 type ResourceBuilder = (t: AdminDSLResource) => void;
 type AdminBuilder = (t: AdminDSL) => void;
+type DashboardBuilder = (t: AdminDSLDashboard) => void;
+
 interface AdminDSLFieldOptions {
   editable?: boolean;
   filterable?: boolean;
@@ -49,9 +62,11 @@ interface AdminDSLFieldOptions {
 
 class AdminDSL {
   constructor(callback: AdminBuilder)
+  resource(resourceName: string, callback: ResourceBuilder)
+  dashboard(callback: DashboardBuilder)
 }
 
-export class AdminDSLResource {
+class AdminDSLResource {
   constructor(resourceName: string, callback: ResourceBuilder)
   icon(iconName: string)
   pagination(sizes: number[])
@@ -62,6 +77,11 @@ export class AdminDSLResource {
   dateField(name: string, options: AdminDSLFieldOptions = {})
   enumField(name: string, values: AdminDSLEnumItem[], options: AdminDSLFieldOptions = {})
   referenceField(name: string, reference: string, options: AdminDSLFieldOptions = {})
+}
+
+class AdminDSLDashboard {
+  constructor(callback: DashboardBuilder)
+  pieChart(resource: string, field: string)
 }
 `;
 
@@ -94,7 +114,7 @@ function extractSubstring(str: string, prefix: string, suffix: string) {
 
 export function buildDSL(code: string) {
   const fn = new Function("admin", `return ${code.replace(/^[\n]+/, "")}`);
-  return fn(admin);
+  return fn(admin) as AdminDSL;
 }
 
 export function testDSL(code: string) {

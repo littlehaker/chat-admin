@@ -1,5 +1,6 @@
 type ResourceBuilder = (t: AdminDSLResource) => void;
 type AdminBuilder = (t: AdminDSL) => void;
+type DashboardBuilder = (t: AdminDSLDashboard) => void;
 
 function makeProxy<T extends object>(_this: T): T {
   return new Proxy(_this, {
@@ -17,6 +18,7 @@ function makeProxy<T extends object>(_this: T): T {
 
 export class AdminDSL {
   resources: AdminDSLResource[];
+  dashboardConfig?: AdminDSLDashboard;
 
   constructor(callback: AdminBuilder) {
     this.resources = [];
@@ -27,6 +29,39 @@ export class AdminDSL {
     const resource = new AdminDSLResource(resourceName, callback);
     this.resources.push(resource);
     return resource;
+  }
+
+  dashboard(callback: DashboardBuilder) {
+    const dashboard = new AdminDSLDashboard(callback);
+    this.dashboardConfig = dashboard;
+    return dashboard;
+  }
+}
+
+export class AdminDSLDashboard {
+  charts: AdminDSLChart[] = [];
+
+  constructor(callback: DashboardBuilder) {
+    callback(this);
+  }
+
+  pieChart(resource: string, field: string) {
+    this.charts.push(new AdminDSLPieChart(resource, field));
+  }
+}
+
+export class AdminDSLChart {
+  resource: string;
+  constructor(resource: string) {
+    this.resource = resource;
+  }
+}
+
+export class AdminDSLPieChart extends AdminDSLChart {
+  field: string;
+  constructor(resource: string, field: string) {
+    super(resource);
+    this.field = field;
   }
 }
 

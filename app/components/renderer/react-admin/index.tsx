@@ -18,10 +18,15 @@ import BookIcon from "@mui/icons-material/Book";
 export const PostIcon = BookIcon;
 import localStorageDataProvider from "ra-data-local-storage";
 
-import { AdminDSL, AdminDSLResource } from "@/app/dsl/admin-dsl";
+import {
+  AdminDSL,
+  AdminDSLDashboard,
+  AdminDSLResource,
+} from "@/app/dsl/admin-dsl";
 import { Fragment, useMemo } from "react";
 import { IconName, renderIcon } from "./icon";
 import { renderField, renderFilterSidebar, renderInput } from "./fields";
+import Dashboard from "./dashboard";
 
 export const renderList = (resource: AdminDSLResource) => () =>
   (
@@ -91,7 +96,10 @@ function renderResource(resource: AdminDSLResource) {
 export function AdminRenderer({ config }: { config?: AdminDSL }) {
   const dataProvider = useMemo(() => localStorageDataProvider(), [config]);
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin
+      dashboard={config?.dashboardConfig ? Dashboard : undefined}
+      dataProvider={dataProvider}
+    >
       {config?.resources.map((resource) => renderResource(resource))}
     </Admin>
   );

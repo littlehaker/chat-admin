@@ -1,3 +1,5 @@
+"use client";
+
 import { state, changeInput, send } from "@/app/store";
 import { IconButton, Input } from "@mui/material";
 import { useSnapshot } from "valtio";
