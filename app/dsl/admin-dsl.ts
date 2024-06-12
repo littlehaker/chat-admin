@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 type ResourceBuilder = (t: AdminDSLResource) => void;
 type AdminBuilder = (t: AdminDSL) => void;
 type DashboardBuilder = (t: AdminDSLDashboard) => void;
@@ -86,6 +88,10 @@ export class AdminDSLResource {
   renderTitle: (record: any) => string = (record: any) =>
     record.title || record.name || record.id;
   iconName?: string;
+
+  get resourceTitle() {
+    return _.capitalize(this.resourceName);
+  }
 
   constructor(resourceName: string, callback: ResourceBuilder) {
     this.resourceName = resourceName;

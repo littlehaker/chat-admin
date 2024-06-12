@@ -130,7 +130,7 @@ ${prevResult}
 My new requirements based on the previous DSL is
 ${prompt}
 
-Don't modify anything that I didn't mentioned
+Don't modify any resource or any fields that I didn't mentioned!!!
 `;
   } else {
     _prompt = prompt;

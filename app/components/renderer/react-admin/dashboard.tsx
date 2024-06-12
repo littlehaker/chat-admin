@@ -135,48 +135,56 @@ export default function Dashboard() {
           );
         })}
       </div>
-
-      <div className="flex flex-row gap-2 flex-wrap">
+      <div>
         {config.resources.map((resource) => {
-          return resource.fields
-            .filter(
-              (x) =>
-                x instanceof AdminDSLEnumField ||
-                x instanceof AdminDSLBooleanField
-            )
-            .map((field) => (
-              <ListBase
-                resource={resource.resourceName}
-                key={`${resource.resourceName}_${field.name}`}
-                disableSyncWithLocation
-                perPage={Infinity}
-              >
-                <WithListContext
-                  render={(listProps) => {
-                    if (listProps.data?.length === 0) {
-                      return null;
-                    }
-                    return (
-                      <Card>
-                        <CardContent>
-                          <Typography variant="h5">
-                            {listProps.defaultTitle} {field.name}
-                          </Typography>
-                          {renderChart(
-                            new AdminDSLPieChart(
-                              resource.resourceName,
-                              field.name
-                            ),
-                            listProps,
-                            field
-                          )}
-                        </CardContent>
-                      </Card>
-                    );
-                  }}
-                />
-              </ListBase>
-            ));
+          const fields = resource.fields.filter(
+            (x) =>
+              x instanceof AdminDSLEnumField ||
+              x instanceof AdminDSLBooleanField
+          );
+          if (fields.length === 0) {
+            return null;
+          }
+          return (
+            <div key={resource.resourceName} className="mt-5">
+              <Typography variant="h4">{resource.resourceTitle}</Typography>
+              <div className="flex flex-row gap-2 flex-wrap mt-2">
+                {fields.map((field) => (
+                  <ListBase
+                    resource={resource.resourceName}
+                    key={`${resource.resourceName}_${field.name}`}
+                    disableSyncWithLocation
+                    perPage={Infinity}
+                  >
+                    <WithListContext
+                      render={(listProps) => {
+                        if (listProps.data?.length === 0) {
+                          return null;
+                        }
+                        return (
+                          <Card>
+                            <CardContent>
+                              <Typography variant="h5">
+                                {listProps.defaultTitle} {field.name}
+                              </Typography>
+                              {renderChart(
+                                new AdminDSLPieChart(
+                                  resource.resourceName,
+                                  field.name
+                                ),
+                                listProps,
+                                field
+                              )}
+                            </CardContent>
+                          </Card>
+                        );
+                      }}
+                    />
+                  </ListBase>
+                ))}
+              </div>
+            </div>
+          );
         })}
       </div>
     </div>
