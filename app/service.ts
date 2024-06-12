@@ -39,21 +39,12 @@ admin((a) => {
 
     // ...
   });
-
-  // There is only one dashboard call
-  a.dashboard((t) => {
-    // dashboard can contain multiple charts
-    t.pieChart("posts", "completed");
-    t.pieChart("users", "gender");
-    t.barChart("posts", "title", "score");
-  });
 });
 `;
 
 const typeDef = `
 type ResourceBuilder = (t: AdminDSLResource) => void;
 type AdminBuilder = (t: AdminDSL) => void;
-type DashboardBuilder = (t: AdminDSLDashboard) => void;
 
 interface AdminDSLFieldOptions {
   editable?: boolean;
@@ -64,7 +55,6 @@ interface AdminDSLFieldOptions {
 class AdminDSL {
   constructor(callback: AdminBuilder)
   resource(resourceName: string, callback: ResourceBuilder)
-  dashboard(callback: DashboardBuilder)
 }
 
 class AdminDSLResource {
@@ -78,12 +68,6 @@ class AdminDSLResource {
   dateField(name: string, options: AdminDSLFieldOptions = {})
   enumField(name: string, values: AdminDSLEnumItem[], options: AdminDSLFieldOptions = {})
   referenceField(name: string, reference: string, options: AdminDSLFieldOptions = {})
-}
-
-class AdminDSLDashboard {
-  constructor(callback: DashboardBuilder)
-  pieChart(resource: string, field: string)
-  barChart(resource: string, nameField: string, valueField: string)
 }
 `;
 
@@ -145,6 +129,8 @@ ${prevResult}
 
 My new requirements based on the previous DSL is
 ${prompt}
+
+Don't modify anything that I didn't mentioned
 `;
   } else {
     _prompt = prompt;

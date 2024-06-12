@@ -92,10 +92,7 @@ function renderResource(resource: AdminDSLResource) {
 export function AdminRenderer({ config }: { config?: AdminDSL }) {
   const dataProvider = useMemo(() => localStorageDataProvider(), [config]);
   return (
-    <Admin
-      dashboard={config?.dashboardConfig ? Dashboard : undefined}
-      dataProvider={dataProvider}
-    >
+    <Admin dashboard={Dashboard} dataProvider={dataProvider}>
       {config?.resources.map((resource) => renderResource(resource))}
     </Admin>
   );

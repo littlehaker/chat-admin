@@ -27,6 +27,8 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
+import CardWithIcon from "./card-with-icon";
+import { renderIcon } from "./icon";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 const CHART_WIDTH = 400;
@@ -95,30 +97,59 @@ function renderChart(
 
 export default function Dashboard() {
   const { config } = useCurrentConfig();
-  if (!config?.dashboardConfig) {
+  if (!config) {
     return undefined;
   }
   return (
-    <div className="flex flex-row flex-wrap gap-2 p-2 m-2">
-      {config.dashboardConfig.charts.map((chartConfig) => {
-        return (
-          <Card>
-            <CardContent>
-              <ListBase
-                resource={chartConfig.resource}
-                disableSyncWithLocation
-                perPage={100}
-              >
-                <WithListContext
-                  render={(listProps) => {
-                    return renderChart(chartConfig, listProps);
-                  }}
-                />
-              </ListBase>
-            </CardContent>
-          </Card>
-        );
-      })}
+    <div className="flex flex-col gap-2 p-2 m-2">
+      <div className="flex flex-row gap-2">
+        {config.resources.map((resource) => {
+          return (
+            <ListBase
+              key={resource.resourceName}
+              resource={resource.resourceName}
+              disableSyncWithLocation
+              perPage={1}
+            >
+              <WithListContext
+                render={(listProps) => {
+                  return (
+                    <CardWithIcon
+                      to={`/${resource.resourceName}`}
+                      icon={renderIcon(resource.iconName)}
+                      title={listProps.defaultTitle}
+                      subtitle={listProps.total?.toString()}
+                    />
+                  );
+                }}
+              />
+            </ListBase>
+          );
+        })}
+      </div>
+      {config.dashboardConfig && (
+        <div className="flex flex-row flex-wrap gap-2">
+          {config.dashboardConfig.charts.map((chartConfig) => {
+            return (
+              <Card>
+                <CardContent>
+                  <ListBase
+                    resource={chartConfig.resource}
+                    disableSyncWithLocation
+                    perPage={100}
+                  >
+                    <WithListContext
+                      render={(listProps) => {
+                        return renderChart(chartConfig, listProps);
+                      }}
+                    />
+                  </ListBase>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
