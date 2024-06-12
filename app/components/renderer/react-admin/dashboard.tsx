@@ -77,12 +77,17 @@ function renderChart(
   }
   if (config instanceof AdminDSLBarChart) {
     return (
-      <BarChart width={CHART_WIDTH} height={CHART_HEIGHT} data={data}>
-        <XAxis dataKey={config.nameField} />
-        <YAxis />
-        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-        <Bar dataKey={config.valueField} type="monotone" fill={getColor(0)} />
-      </BarChart>
+      <>
+        <Typography variant="h5">
+          {list.defaultTitle} {config.valueField}
+        </Typography>
+        <BarChart width={CHART_WIDTH} height={CHART_HEIGHT} data={data}>
+          <XAxis dataKey={config.nameField} />
+          <YAxis />
+          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+          <Bar dataKey={config.valueField} type="monotone" fill={getColor(0)} />
+        </BarChart>
+      </>
     );
   }
   return null;
