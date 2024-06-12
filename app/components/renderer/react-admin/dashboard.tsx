@@ -2,7 +2,10 @@
 
 import {
   AdminDSLBarChart,
+  AdminDSLBooleanField,
   AdminDSLChart,
+  AdminDSLEnumField,
+  AdminDSLField,
   AdminDSLPieChart,
 } from "@/app/dsl/admin-dsl";
 import { useCurrentConfig } from "@/app/store";
@@ -40,7 +43,8 @@ function getColor(index: number) {
 
 function renderChart(
   config: AdminDSLChart,
-  list: ListControllerResult<RaRecord<Identifier>>
+  list: ListControllerResult<RaRecord<Identifier>>,
+  field: AdminDSLField
 ) {
   const data = list.data;
   if (config instanceof AdminDSLPieChart) {
@@ -51,45 +55,48 @@ function renderChart(
       .map(([name, value]) => ({ name, value }))
       .value();
 
+    const nameFormatter = (value: any) => {
+      if (field instanceof AdminDSLEnumField) {
+        return (
+          (field as AdminDSLEnumField).enums.find((x) => x.value === value)
+            ?.label || value
+        );
+      }
+      if (field instanceof AdminDSLBooleanField) {
+        return value === "true" ? "Yes" : "No";
+      }
+      return value;
+    };
+
     return (
-      <>
-        <Typography variant="h5">
-          {list.defaultTitle} {config.field}
-        </Typography>
-        <PieChart width={CHART_WIDTH} height={CHART_HEIGHT}>
-          <Pie
-            data={grouped}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={80}
-            fill="#8884d8"
-          >
-            {grouped.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(index)} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-      </>
+      <PieChart width={CHART_WIDTH} height={CHART_HEIGHT}>
+        <Pie
+          data={grouped}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          innerRadius={60}
+          outerRadius={80}
+          fill="#8884d8"
+        >
+          {grouped.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={getColor(index)} />
+          ))}
+        </Pie>
+        <Tooltip formatter={(value, name) => [value, nameFormatter(name)]} />
+        <Legend formatter={nameFormatter} />
+      </PieChart>
     );
   }
   if (config instanceof AdminDSLBarChart) {
     return (
-      <>
-        <Typography variant="h5">
-          {list.defaultTitle} {config.valueField}
-        </Typography>
-        <BarChart width={CHART_WIDTH} height={CHART_HEIGHT} data={data}>
-          <XAxis dataKey={config.nameField} />
-          <YAxis />
-          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-          <Bar dataKey={config.valueField} type="monotone" fill={getColor(0)} />
-        </BarChart>
-      </>
+      <BarChart width={CHART_WIDTH} height={CHART_HEIGHT} data={data}>
+        <XAxis dataKey={config.nameField} />
+        <YAxis />
+        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+        <Bar dataKey={config.valueField} type="monotone" fill={getColor(0)} />
+      </BarChart>
     );
   }
   return null;
@@ -102,6 +109,7 @@ export default function Dashboard() {
   }
   return (
     <div className="flex flex-col gap-2 p-2 m-2">
+      {/* Resources */}
       <div className="flex flex-row gap-2">
         {config.resources.map((resource) => {
           return (
@@ -127,29 +135,50 @@ export default function Dashboard() {
           );
         })}
       </div>
-      {config.dashboardConfig && (
-        <div className="flex flex-row flex-wrap gap-2">
-          {config.dashboardConfig.charts.map((chartConfig) => {
-            return (
-              <Card>
-                <CardContent>
-                  <ListBase
-                    resource={chartConfig.resource}
-                    disableSyncWithLocation
-                    perPage={100}
-                  >
-                    <WithListContext
-                      render={(listProps) => {
-                        return renderChart(chartConfig, listProps);
-                      }}
-                    />
-                  </ListBase>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+
+      <div className="flex flex-row gap-2 flex-wrap">
+        {config.resources.map((resource) => {
+          return resource.fields
+            .filter(
+              (x) =>
+                x instanceof AdminDSLEnumField ||
+                x instanceof AdminDSLBooleanField
+            )
+            .map((field) => (
+              <ListBase
+                resource={resource.resourceName}
+                key={`${resource.resourceName}_${field.name}`}
+                disableSyncWithLocation
+                perPage={Infinity}
+              >
+                <WithListContext
+                  render={(listProps) => {
+                    if (listProps.data?.length === 0) {
+                      return null;
+                    }
+                    return (
+                      <Card>
+                        <CardContent>
+                          <Typography variant="h5">
+                            {listProps.defaultTitle} {field.name}
+                          </Typography>
+                          {renderChart(
+                            new AdminDSLPieChart(
+                              resource.resourceName,
+                              field.name
+                            ),
+                            listProps,
+                            field
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  }}
+                />
+              </ListBase>
+            ));
+        })}
+      </div>
     </div>
   );
 }
