@@ -47,7 +47,7 @@ export function useCurrentConfig() {
   const config = useMemo(() => {
     return getConfigFromItem(current);
   }, [current]);
-  return { config, item: current };
+  return { config: config?.dsl, item: current, advices: config?.advices };
 }
 
 subscribe(state, () => {
@@ -56,6 +56,11 @@ subscribe(state, () => {
 
 export function changeInput(val: string) {
   state.input = val;
+}
+
+export async function sendPrompt(prompt: string) {
+  state.input = prompt;
+  await send();
 }
 
 export async function send() {

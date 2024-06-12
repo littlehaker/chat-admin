@@ -40,6 +40,13 @@ admin((a) => {
     // ...
   });
 });
+
+// also, give me 3 advices based on the dsl above
+advice([
+  "Add a birthday for user",
+  "Change pagination for post to [20, 50, 100]",
+  "Add a low value for post's priority"
+]);
 `;
 
 const typeDef = `
@@ -69,6 +76,9 @@ class AdminDSLResource {
   enumField(name: string, values: AdminDSLEnumItem[], options: AdminDSLFieldOptions = {})
   referenceField(name: string, reference: string, options: AdminDSLFieldOptions = {})
 }
+
+admin(callback: AdminBuilder)
+advices(array: string[])
 `;
 
 const systemPrompt = `
@@ -85,7 +95,7 @@ This is an example of creating an admin application to manage posts and users
 ${exampleDSL}
 ======= end ========
 
-Use this DSL to make admin application I want. Only respond the code in this DSL, don't respond anything else!!!
+Use this DSL to make admin application I want. Only respond the code in this DSL and the advices, don't respond anything else!!!
 `;
 
 function extractSubstring(str: string, prefix: string, suffix: string) {
@@ -99,8 +109,24 @@ function extractSubstring(str: string, prefix: string, suffix: string) {
 }
 
 export function buildDSL(code: string) {
-  const fn = new Function("admin", `return ${code.replace(/^[\n]+/, "")}`);
-  return fn(admin) as AdminDSL;
+  const fn = new Function(
+    "admin",
+    "advice",
+    // `return ${code.replace(/^[\n]+/, "")}`
+    code
+  );
+
+  let adminDsl: AdminDSL = new AdminDSL(() => {});
+  function _admin(callback: (a: AdminDSL) => void) {
+    adminDsl = admin(callback);
+  }
+
+  let advices: string[] = [];
+  function _advice(args: string[]) {
+    advices = args;
+  }
+  fn(_admin, _advice);
+  return { dsl: adminDsl, advices };
 }
 
 export function testDSL(code: string) {
