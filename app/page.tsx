@@ -2,14 +2,36 @@
 
 import "@fontsource/roboto/300.css";
 
-import { useCurrentConfig } from "./store";
+import { setState, state, useCurrentConfig } from "./store";
 import UserInput from "./components/ui/user-input";
 import { AdminRenderer } from "./components/renderer/react-admin";
 import History from "./components/ui/history";
 import { Typography } from "@mui/material";
 import HintList from "./components/ui/hint-list";
+import { useEffect } from "react";
+import { subscribe } from "valtio";
+
+const lsKey = "valtioStore";
+
 export default function Home() {
   const { config, item } = useCurrentConfig();
+
+  useEffect(() => {
+    const lsState = localStorage.getItem(lsKey);
+
+    // sync to localStorage
+    subscribe(state, () => {
+      localStorage.setItem(lsKey, JSON.stringify(state));
+    });
+
+    if (!lsState) {
+      return;
+    }
+    try {
+      setState(JSON.parse(lsState));
+    } catch {}
+  }, []);
+
   if (!item) {
     // Empty
     return (

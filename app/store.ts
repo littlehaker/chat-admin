@@ -12,10 +12,7 @@ interface HistoryItem {
   isError?: true;
 }
 
-const lsKey = "valtioStore";
-const lsState = localStorage.getItem(lsKey);
-
-const initState = {
+export const initState = {
   input: "",
   submitting: false,
 
@@ -24,9 +21,9 @@ const initState = {
   history: [] as HistoryItem[],
 };
 type State = typeof initState;
-const currentState: State = lsState ? JSON.parse(lsState) : initState;
+// const currentState: State = lsState ? JSON.parse(lsState) : initState;
 
-export const state = proxy(currentState);
+export const state = proxy(initState);
 function getCurrentItem(snap: State) {
   return snap.history.find((x) => x.time === snap.currentHistoryItem);
 }
@@ -36,6 +33,11 @@ function getConfigFromItem(item?: HistoryItem) {
   } else {
     return buildDSL(item.content);
   }
+}
+export function setState(newState: State) {
+  state.input = newState.input;
+  state.history = newState.history;
+  state.currentHistoryItem = newState.currentHistoryItem;
 }
 export function useCurrentConfig() {
   const snap = useSnapshot(state);
@@ -49,10 +51,6 @@ export function useCurrentConfig() {
   }, [current]);
   return { config: config?.dsl, item: current, advices: config?.advices };
 }
-
-subscribe(state, () => {
-  localStorage.setItem(lsKey, JSON.stringify(state));
-});
 
 export function changeInput(val: string) {
   state.input = val;
