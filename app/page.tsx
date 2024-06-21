@@ -2,7 +2,7 @@
 
 import "@fontsource/roboto/300.css";
 
-import { setState, state, useCurrentConfig } from "./store";
+import { resetState, state, useCurrentConfig } from "./store";
 import UserInput from "./components/ui/user-input";
 import { AdminRenderer } from "./components/renderer/react-admin";
 import History from "./components/ui/history";
@@ -28,7 +28,7 @@ export default function Home() {
       return;
     }
     try {
-      setState(JSON.parse(lsState));
+      resetState(JSON.parse(lsState));
     } catch {}
   }, []);
 

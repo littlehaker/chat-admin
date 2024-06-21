@@ -23,7 +23,7 @@ export const initState = {
 type State = typeof initState;
 // const currentState: State = lsState ? JSON.parse(lsState) : initState;
 
-export const state = proxy(initState);
+export const state = proxy<State>(initState);
 function getCurrentItem(snap: State) {
   return snap.history.find((x) => x.time === snap.currentHistoryItem);
 }
@@ -34,10 +34,12 @@ function getConfigFromItem(item?: HistoryItem) {
     return buildDSL(item.content);
   }
 }
-export function setState(newState: State) {
-  state.input = newState.input;
-  state.history = newState.history;
-  state.currentHistoryItem = newState.currentHistoryItem;
+
+export function resetState(newState: State) {
+  Object.keys(newState).forEach((_key) => {
+    const key = _key as keyof State;
+    (state as any)[key] = newState[key];
+  });
 }
 export function useCurrentConfig() {
   const snap = useSnapshot(state);
