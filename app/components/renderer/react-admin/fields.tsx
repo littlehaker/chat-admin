@@ -119,7 +119,7 @@ export function renderFilter(field: AdminDSLField) {
 
 export function renderFilters(resource: AdminDSLResource) {
   return [
-    <SearchInput source="q" alwaysOn />,
+    <SearchInput source="q" alwaysOn key="q" />,
     ...resource.fields
       .filter((x) => x.options?.filterable === true)
       .map(renderInput),
@@ -137,7 +137,7 @@ function renderFieldIcon(field: AdminDSLField) {
   return icon;
 }
 
-export const renderFilterSidebar = (resource: AdminDSLResource) => {
+export const FilterSidebar = ({ resource }: { resource: AdminDSLResource }) => {
   const filterableFields = useMemo(
     () => resource.fields.filter((x) => x.options?.filterable === true),
     [resource]

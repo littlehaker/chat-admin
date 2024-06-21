@@ -21,57 +21,67 @@ import localStorageDataProvider from "ra-data-local-storage";
 import { AdminDSL, AdminDSLResource } from "@/app/dsl/admin-dsl";
 import { Fragment, useMemo } from "react";
 import { IconName, renderIcon } from "./icon";
-import { renderField, renderFilterSidebar, renderInput } from "./fields";
+import { renderField, FilterSidebar, renderInput } from "./fields";
 import Dashboard from "./dashboard";
 import { Layout } from "./layout";
 
-export const renderList = (resource: AdminDSLResource) => () =>
-  (
-    <List
-      aside={renderFilterSidebar(resource)}
-      pagination={<Pagination rowsPerPageOptions={resource.paginationSizes} />}
-    >
-      <Datagrid
-        bulkActionButtons={
-          <Fragment>
-            <BulkExportButton />
-            <BulkDeleteButton />
-          </Fragment>
+export const renderList = (resource: AdminDSLResource) =>
+  function ResourceList() {
+    return (
+      <List
+        aside={<FilterSidebar resource={resource} />}
+        pagination={
+          <Pagination rowsPerPageOptions={resource.paginationSizes} />
         }
       >
-        {resource.fields.map(renderField)}
-        <EditButton />
-        <ShowButton />
-      </Datagrid>
-    </List>
-  );
+        <Datagrid
+          bulkActionButtons={
+            <Fragment>
+              <BulkExportButton />
+              <BulkDeleteButton />
+            </Fragment>
+          }
+        >
+          {resource.fields.map(renderField)}
+          <EditButton />
+          <ShowButton />
+        </Datagrid>
+      </List>
+    );
+  };
 
-export const renderEdit = (resource: AdminDSLResource) => () =>
-  (
-    <Edit redirect="list">
-      <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
-    </Edit>
-  );
+export const renderEdit = (resource: AdminDSLResource) =>
+  function ResourceEdit() {
+    return (
+      <Edit redirect="list">
+        <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
+      </Edit>
+    );
+  };
 
-export const renderCreate = (resource: AdminDSLResource) => () =>
-  (
-    <Create redirect="list">
-      <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
-    </Create>
-  );
+export const renderCreate = (resource: AdminDSLResource) =>
+  function ResourceCreate() {
+    return (
+      <Create redirect="list">
+        <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
+      </Create>
+    );
+  };
 
-const renderShow = (resource: AdminDSLResource) => () =>
-  (
-    <Show>
-      <SimpleShowLayout>{resource.fields.map(renderField)}</SimpleShowLayout>
-    </Show>
-  );
+const renderShow = (resource: AdminDSLResource) =>
+  function ResourceShow() {
+    return (
+      <Show>
+        <SimpleShowLayout>{resource.fields.map(renderField)}</SimpleShowLayout>
+      </Show>
+    );
+  };
 
 function renderResource(resource: AdminDSLResource) {
-  const ResourceList = useMemo(() => renderList(resource), [resource]);
-  const ResourceEdit = useMemo(() => renderEdit(resource), [resource]);
-  const ResourceCreate = useMemo(() => renderCreate(resource), [resource]);
-  const ResourceShow = useMemo(() => renderShow(resource), [resource]);
+  const ResourceList = renderList(resource);
+  const ResourceEdit = renderEdit(resource);
+  const ResourceCreate = renderCreate(resource);
+  const ResourceShow = renderShow(resource);
   return (
     <Resource
       key={resource.resourceName}

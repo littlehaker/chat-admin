@@ -1,6 +1,6 @@
 "use client";
 
-import { proxy, subscribe, useSnapshot } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 import { buildDSL, generateCode, normalize, testDSL } from "./service";
 import _ from "lodash";
 import { useMemo } from "react";
@@ -48,7 +48,7 @@ export function useCurrentConfig() {
 
   const current = useMemo(() => {
     return getCurrentItem(snap as State);
-  }, [snap.currentHistoryItem]);
+  }, [snap, snap.currentHistoryItem]);
 
   const config = useMemo(() => {
     return getConfigFromItem(current);

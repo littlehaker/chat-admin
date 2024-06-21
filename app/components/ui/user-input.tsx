@@ -75,7 +75,7 @@ export default function UserInput() {
           >
             <List>
               {advices.map((advice) => (
-                <ListItem disablePadding>
+                <ListItem disablePadding key={advice}>
                   <ListItemButton
                     onClick={() => {
                       sendPrompt(advice);
