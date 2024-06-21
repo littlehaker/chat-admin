@@ -13,6 +13,8 @@ interface HistoryItem {
 }
 
 export const initState = {
+  visible: false,
+
   input: "",
   submitting: false,
 
@@ -95,4 +97,12 @@ export async function send() {
 
 export function selectHistoryItem(time: number) {
   state.currentHistoryItem = time;
+}
+
+export function open() {
+  state.visible = true;
+}
+
+export function close() {
+  state.visible = false;
 }

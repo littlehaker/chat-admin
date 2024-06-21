@@ -23,6 +23,7 @@ import { Fragment, useMemo } from "react";
 import { IconName, renderIcon } from "./icon";
 import { renderField, renderFilterSidebar, renderInput } from "./fields";
 import Dashboard from "./dashboard";
+import { Layout } from "./layout";
 
 export const renderList = (resource: AdminDSLResource) => () =>
   (
@@ -92,7 +93,7 @@ function renderResource(resource: AdminDSLResource) {
 export function AdminRenderer({ config }: { config?: AdminDSL }) {
   const dataProvider = useMemo(() => localStorageDataProvider(), [config]);
   return (
-    <Admin dashboard={Dashboard} dataProvider={dataProvider}>
+    <Admin dashboard={Dashboard} dataProvider={dataProvider} layout={Layout}>
       {config?.resources.map((resource) => renderResource(resource))}
     </Admin>
   );

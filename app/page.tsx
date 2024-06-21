@@ -10,6 +10,7 @@ import { Typography } from "@mui/material";
 import HintList from "./components/ui/hint-list";
 import { useEffect } from "react";
 import { subscribe } from "valtio";
+import AIDrawer from "./components/ui/ai-drawer";
 
 const lsKey = "valtioStore";
 
@@ -57,13 +58,14 @@ export default function Home() {
       <div className="flex-1">
         {item && <AdminRenderer config={config} key={item?.time} />}
       </div>
-      <div className="flex flex-col">
+      <AIDrawer />
+      {/* <div className="flex flex-col">
         <div className="h-[50px]"></div>
         <div className="flex-1 overflow-y-auto">
           <History />
         </div>
         <UserInput />
-      </div>
+      </div> */}
     </div>
   );
 }
