@@ -11,6 +11,7 @@ import HintList from "./components/ui/hint-list";
 import { useEffect } from "react";
 import { subscribe } from "valtio";
 import AIDrawer from "./components/ui/ai-drawer";
+import APISetting from "./components/ui/api-setting";
 
 const lsKey = "valtioStore";
 
@@ -42,6 +43,7 @@ export default function Home() {
           <UserInput />
           <HintList />
         </div>
+        <APISetting />
         <iframe
           width="170"
           height="30"
@@ -59,13 +61,6 @@ export default function Home() {
         {item && <AdminRenderer config={config} key={item?.time} />}
       </div>
       <AIDrawer />
-      {/* <div className="flex flex-col">
-        <div className="h-[50px]"></div>
-        <div className="flex-1 overflow-y-auto">
-          <History />
-        </div>
-        <UserInput />
-      </div> */}
     </div>
   );
 }

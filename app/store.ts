@@ -3,7 +3,7 @@
 import { proxy, useSnapshot } from "valtio";
 import { buildDSL, generateCode, normalize, testDSL } from "./service";
 import _ from "lodash";
-import { useMemo } from "react";
+import { ChangeEvent, useMemo } from "react";
 
 interface HistoryItem {
   userPrompt: string;
@@ -21,9 +21,15 @@ export const initState = {
   currentHistoryItem: 0, // currentTimestamp
 
   history: [] as HistoryItem[],
+
+  // OpenAI API Config
+  api: {
+    visible: true,
+    endpoint: "",
+    key: "",
+  },
 };
 type State = typeof initState;
-// const currentState: State = lsState ? JSON.parse(lsState) : initState;
 
 export const state = proxy<State>(initState);
 function getCurrentItem(snap: State) {
@@ -105,4 +111,22 @@ export function open() {
 
 export function close() {
   state.visible = false;
+}
+
+export function openAPISetting() {
+  state.api.visible = true;
+}
+
+export function closeAPISetting() {
+  if (state.api.endpoint && state.api.key) {
+    state.api.visible = false;
+  }
+}
+
+export function inputAPIEndpoint(e: ChangeEvent<HTMLInputElement>) {
+  state.api.endpoint = e.target.value;
+}
+
+export function inputAPIKey(e: ChangeEvent<HTMLInputElement>) {
+  state.api.key = e.target.value;
 }

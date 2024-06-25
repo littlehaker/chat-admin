@@ -1,7 +1,8 @@
 import axios from "axios";
 import { AdminDSL, admin } from "./dsl/admin-dsl";
+import { state } from "./store";
 
-const url = "http://localhost:6767";
+const url = state.api.endpoint;
 
 export const exampleDSL = `
 admin((a) => {
