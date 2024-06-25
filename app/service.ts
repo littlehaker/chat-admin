@@ -2,8 +2,6 @@ import axios from "axios";
 import { AdminDSL, admin } from "./dsl/admin-dsl";
 import { state } from "./store";
 
-const url = state.api.endpoint;
-
 export const exampleDSL = `
 admin((a) => {
   a.resource("posts", (t) => {
@@ -159,7 +157,7 @@ Don't modify any resource or any fields that I didn't mentioned!!!
     { role: "user", content: _prompt },
   ];
   const { data } = await axios.post(
-    url,
+    state.api.endpoint,
     {
       messages,
       model: "gpt-3.5-turbo",
