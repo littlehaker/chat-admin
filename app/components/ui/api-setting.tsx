@@ -27,15 +27,9 @@ export default function APISetting() {
   }, [apiAvailable]);
 
   return (
-    <Dialog
-      open={snap.api.visible}
-      onClose={closeAPISetting}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">Config OpenAI API Key</DialogTitle>
+    <Dialog open={snap.api.visible} onClose={closeAPISetting}>
+      <DialogTitle>Config OpenAI API Key</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description"></DialogContentText>
         <div className="w-[500px] flex flex-col gap-2">
           <TextField
             value={snap.api.endpoint}

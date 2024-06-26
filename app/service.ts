@@ -156,6 +156,7 @@ Don't modify any resource or any fields that I didn't mentioned!!!
     { role: "system", content: systemPrompt },
     { role: "user", content: _prompt },
   ];
+
   const { data } = await axios.post(
     state.api.endpoint,
     {
@@ -167,6 +168,7 @@ Don't modify any resource or any fields that I didn't mentioned!!!
     {
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + state.api.key,
       },
     }
   );
