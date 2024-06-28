@@ -147,7 +147,7 @@ export default function Dashboard() {
           }
           return (
             <div key={resource.resourceName} className="mt-5">
-              <Typography variant="h4">{resource.resourceTitle}</Typography>
+              {/* <Typography variant="h4">{resource.resourceTitle}</Typography> */}
               <div className="flex flex-row gap-2 flex-wrap mt-2">
                 {fields.map((field) => (
                   <ListBase

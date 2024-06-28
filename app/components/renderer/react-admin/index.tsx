@@ -63,7 +63,11 @@ export const renderCreate = (resource: AdminDSLResource) =>
   function ResourceCreate() {
     return (
       <Create redirect="list">
-        <SimpleForm>{resource.fields.map(renderInput)}</SimpleForm>
+        <SimpleForm>
+          {resource.fields.map((x) =>
+            x.options?.editable === false ? undefined : renderInput(x)
+          )}
+        </SimpleForm>
       </Create>
     );
   };
