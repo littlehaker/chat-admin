@@ -25,7 +25,7 @@ export const initState = {
   // OpenAI API Config
   api: {
     visible: true,
-    endpoint: "",
+    endpoint: "https://api.openai.com/v1/chat/completions",
     key: "",
   },
 };
