@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AdminDSL, admin } from "./dsl/admin-dsl";
+import { AdminDSL, admin } from "./_dsl/admin-dsl";
 import { state } from "./store";
 
 export const exampleDSL = `

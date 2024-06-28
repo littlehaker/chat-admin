@@ -7,7 +7,7 @@ import {
   AdminDSLEnumField,
   AdminDSLField,
   AdminDSLPieChart,
-} from "@/app/dsl/admin-dsl";
+} from "@/app/_dsl/admin-dsl";
 import { useCurrentConfig } from "@/app/store";
 import { Card, CardContent, Typography } from "@mui/material";
 import _ from "lodash";

@@ -3,15 +3,15 @@
 import "@fontsource/roboto/300.css";
 
 import { resetState, state, useCurrentConfig } from "./store";
-import UserInput from "./components/ui/user-input";
-import { AdminRenderer } from "./components/renderer/react-admin";
-import History from "./components/ui/history";
+import UserInput from "./_components/ui/user-input";
+import { AdminRenderer } from "./_components/renderer/react-admin";
+import History from "./_components/ui/history";
 import { Typography } from "@mui/material";
-import HintList from "./components/ui/hint-list";
+import HintList from "./_components/ui/hint-list";
 import { useEffect } from "react";
 import { subscribe } from "valtio";
-import AIDrawer from "./components/ui/ai-drawer";
-import APISetting from "./components/ui/api-setting";
+import AIDrawer from "./_components/ui/ai-drawer";
+import APISetting from "./_components/ui/api-setting";
 
 const lsKey = "valtioStore";
 

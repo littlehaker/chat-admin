@@ -5,7 +5,7 @@ import {
   AdminDSLEnumField,
   AdminDSLResource,
   AdminDSLReferenceField,
-} from "@/app/dsl/admin-dsl";
+} from "@/app/_dsl/admin-dsl";
 import { Card, CardContent } from "@mui/material";
 import {
   NumberField,
