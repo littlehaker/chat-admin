@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chat Admin
 
-## Getting Started
+Building admin applications is always verbose. Chat Admin is a tool aiming to make the process fun and fast, especially for prototyping.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Chat Admin let you describe admin applications using your imagination and instantly brings them to life. This tool converts your conversational inputs into fully operational admin interfaces, making the process seamless and user-friendly.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+https://github.com/littlehaker/chat-admin/assets/1083307/02097c63-0147-4585-8b96-7fd186eab574
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- _Conversational Interface_: Describe your admin application requirements in natural language.
+- _Instant Prototyping_: Quickly generate functional admin interfaces from your descriptions.
+- _User-Friendly_: Simplifies the development process, making it accessible even for non-developers.
 
-## Learn More
+## Live Demo
 
-To learn more about Next.js, take a look at the following resources:
+[Try the demo](https://chat-admin-virid.vercel.app)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Thank You
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Chat Admin uses [react-admin](https://github.com/marmelab/react-admin) to build the admin applications, thanks to its invaluable contributions and inspiration.
