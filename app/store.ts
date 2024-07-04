@@ -27,6 +27,9 @@ export const initState = {
     visible: true,
     endpoint: "https://api.openai.com/v1/chat/completions",
     key: "",
+    model: "gpt-3.5-turbo",
+    maxToken: 2048,
+    temperature: 0,
   },
 };
 type State = typeof initState;
@@ -123,10 +126,22 @@ export function closeAPISetting() {
   }
 }
 
-export function inputAPIEndpoint(e: ChangeEvent<HTMLInputElement>) {
-  state.api.endpoint = e.target.value;
+export function inputAPIEndpoint(val: string) {
+  state.api.endpoint = val;
 }
 
-export function inputAPIKey(e: ChangeEvent<HTMLInputElement>) {
-  state.api.key = e.target.value;
+export function inputAPIKey(val: string) {
+  state.api.key = val;
+}
+
+export function inputModel(val: string) {
+  state.api.model = val;
+}
+
+export function inputMaxToken(val: number) {
+  state.api.maxToken = val;
+}
+
+export function inputTemperature(val: number) {
+  state.api.temperature = val;
 }

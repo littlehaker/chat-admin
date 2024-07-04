@@ -161,9 +161,9 @@ Don't modify any resource or any fields that I didn't mentioned!!!
     state.api.endpoint,
     {
       messages,
-      model: "gpt-3.5-turbo",
-      max_tokens: 2048,
-      temperature: 0,
+      model: state.api.model || "gpt-3.5-turbo",
+      max_tokens: state.api.maxToken || 2048,
+      temperature: state.api.temperature || 0,
     },
     {
       headers: {
